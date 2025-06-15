@@ -1,9 +1,9 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+from pydantic import BaseModel
+from datetime import date
+from .enums import EstadoLicencia
 
-class Licencia:
-    def __init__(self):
-        self.id = None
-        self.estado = None
-        self.fechaEmision = None
-        self.fechaExpiracion = None
+class Licencia(BaseModel):
+    id: str
+    estado: EstadoLicencia
+    fechaEmision: date
+    fechaExpiracion: date

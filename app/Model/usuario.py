@@ -1,9 +1,7 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+from pydantic import BaseModel
 
-class Usuario:
-    def __init__(self):
-        self.id = None
-        self.direccionWallet = None
-        self.nombre = None
-        self.correo = None
+class Usuario(BaseModel):
+    id: str
+    direccionWallet: str
+    nombre: str
+    correo: str

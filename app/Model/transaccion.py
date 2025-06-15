@@ -1,8 +1,8 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+from pydantic import BaseModel
+from datetime import date
+from .enums import TipoTransaccion
 
-class Transaccion:
-    def __init__(self):
-        self.id = None
-        self.fecha = None
-        self.tipo = None
+class Transaccion(BaseModel):
+    id: str
+    fecha: date
+    tipo: TipoTransaccion
