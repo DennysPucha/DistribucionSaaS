@@ -1,7 +1,8 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+from sqlalchemy import Column, Integer, String
+from app.database import Base
 
-class Rol:
-    def __init__(self):
-        self.id = None
-        self.nombre = None
+class Rol(Base):
+    __tablename__ = "roles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String(50), unique=True, index=True, nullable=False)
