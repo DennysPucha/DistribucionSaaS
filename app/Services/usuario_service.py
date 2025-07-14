@@ -1,4 +1,4 @@
-from Model.usuario import Usuario
+from app.Model.usuario import Usuario
 
 usuarios = []
 

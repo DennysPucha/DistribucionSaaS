@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from Services.licencia_service import emitir_licencia, revocar_licencia, listar_licencias
+from app.Services.licencia_service import emitir_licencia, revocar_licencia, listar_licencias
 
 router = APIRouter()
 

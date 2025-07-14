@@ -1,7 +1,7 @@
 from datetime import date, timedelta
-from Model.licencia import Licencia
-from Model.enums import EstadoLicencia, TipoTransaccion
-from Model.transaccion import Transaccion
+from app.Model.licencia import Licencia
+from app.Model.enums import EstadoLicencia, TipoTransaccion
+from app.Model.transaccion import Transaccion
 import uuid
 
 licencias = []

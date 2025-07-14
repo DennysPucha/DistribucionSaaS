@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from Services.licencia_service import transacciones
+from app.Services.licencia_service import transacciones
 
 router = APIRouter()
 
