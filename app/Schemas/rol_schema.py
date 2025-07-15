@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional, List
 
 class RolBase(BaseModel):
     nombre: str
@@ -11,3 +12,13 @@ class Rol(RolBase):
 
     class Config:
         orm_mode = True
+
+class RolResponse(BaseModel):
+    rol: RolBase
+    code: int
+    message: str
+
+class RolListResponse(BaseModel):
+    roles: List[RolBase]
+    code: int
+    message: str
