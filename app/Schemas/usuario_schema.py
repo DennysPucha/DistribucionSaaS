@@ -18,5 +18,16 @@ class UsuarioUpdate(BaseModel):
 class Usuario(UsuarioBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
+
+class UsuarioResponse(BaseModel):
+    usuario: Usuario
+    code: int
+    message: str
+
+class UsuarioListResponse(BaseModel):
+    usuarios: list[Usuario]
+    code: int
+    message: str

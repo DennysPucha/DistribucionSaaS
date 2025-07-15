@@ -10,8 +10,9 @@ class RolCreate(RolBase):
 class Rol(RolBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
 
 class RolResponse(BaseModel):
     rol: RolBase

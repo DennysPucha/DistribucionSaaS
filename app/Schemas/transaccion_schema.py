@@ -1,17 +1,29 @@
 from pydantic import BaseModel
 from datetime import date
+from typing import List
 from app.Model.enums import TipoTransaccion
 
 class TransaccionBase(BaseModel):
+    fecha: date
     tipo: TipoTransaccion
     licencia_id: int
 
 class TransaccionCreate(TransaccionBase):
-    fecha: date
+    pass
 
 class Transaccion(TransaccionBase):
     id: int
-    fecha: date
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
+
+class TransaccionResponse(BaseModel):
+    transaccion: Transaccion
+    code: int
+    message: str
+
+class TransaccionListResponse(BaseModel):
+    transacciones: List[Transaccion]
+    code: int
+    message: str

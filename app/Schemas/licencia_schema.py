@@ -1,23 +1,36 @@
 from pydantic import BaseModel
-from typing import Optional
 from datetime import date
+from typing import Optional, List
 from app.Model.enums import EstadoLicencia
 
 class LicenciaBase(BaseModel):
     clave_licencia: str
+    estado: EstadoLicencia
     fecha_emision: date
     fecha_expiracion: date
     usuario_id: int
 
-class LicenciaCreate(LicenciaBase):
-    pass
+class LicenciaCreate(BaseModel):
+    usuario_id: int
+    contrato_id: int
+    dias_de_validez: int = 365
 
 class LicenciaUpdate(BaseModel):
-    estado: Optional[EstadoLicencia] = None
+    estado: EstadoLicencia
 
 class Licencia(LicenciaBase):
     id: int
-    estado: EstadoLicencia
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
+
+class LicenciaResponse(BaseModel):
+    licencia: Licencia
+    code: int
+    message: str
+
+class LicenciaListResponse(BaseModel):
+    licencias: List[Licencia]
+    code: int
+    message: str
