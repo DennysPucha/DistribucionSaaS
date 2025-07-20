@@ -28,6 +28,14 @@ def login(data: LoginWeb3Request, db: Session = Depends(get_db)):
     """
     # 1. Recupera y elimina el nonce de la BD para asegurar que solo se use una vez
     db_nonce = nonce_service.get_and_delete_nonce(db, address=data.address, received_nonce=data.nonce)
+
+    print(f"db_nonce: {db_nonce}")
+    if not db_nonce:
+        print("Nonce no encontrado o ya utilizado.")
+    else:
+        print(f"Nonce encontrado: {db_nonce.nonce}")
+
+    print(f"Verificando login: address={data.address}, nonce={data.nonce}")
     
     if not db_nonce:
         raise HTTPException(
@@ -36,7 +44,7 @@ def login(data: LoginWeb3Request, db: Session = Depends(get_db)):
         )
 
     # 2. Verifica la firma usando el nonce que estaba en la BD
-    token = login_with_wallet(data.address, data.signature, db_nonce.nonce)
+    token = login_with_wallet(data.address, data.signature, db_nonce.nonce, db)
     if not token:
         raise HTTPException(status_code=401, detail="Firma inválida.")
         

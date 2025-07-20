@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.Routers import usuarios, licencias, transacciones, auth, roles, contratos
 from app.database import engine, Base
-
+from fastapi.middleware.cors import CORSMiddleware
 # Importa todos los modelos para que Base los conozca
 from app.Model import usuario, rol, licencia, transaccion, nonce, contrato
 
@@ -14,10 +14,17 @@ app = FastAPI(
     version="1.0.0"
 )
 
+app.add_middleware(CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Incluye los routers
 app.include_router(auth.router)
 app.include_router(roles.router)
-app.include_router(usuarios.router, prefix="/usuarios", tags=["Usuarios"])
+app.include_router(usuarios.router)
 app.include_router(contratos.router)
 app.include_router(licencias.router)
 app.include_router(transacciones.router)
