@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './styles.css';
+import './licencias.css';
 
 const licenciasData = [
   {
@@ -7,21 +7,42 @@ const licenciasData = [
     nombre: 'Licencia Pro',
     descripcion: 'Acceso completo a todas las funciones premium.',
     descripcionCompleta: 'Incluye actualizaciones, soporte prioritario y acceso anticipado a nuevas características.',
-    imagen: 'https://via.placeholder.com/300x150?text=Licencia+Pro',
+    imagen: 'https://support.workiva.com/hc/article_attachments/33726798600468',
   },
   {
     id: 2,
     nombre: 'Licencia Básica',
     descripcion: 'Funciones esenciales para empezar.',
     descripcionCompleta: 'Ideal para pequeñas empresas o desarrolladores independientes.',
-    imagen: 'https://via.placeholder.com/300x150?text=Licencia+Básica',
+    imagen: 'https://www.santandersmusic.com/media/magazine/spotify-2-1.jpg',
   },
   {
     id: 3,
     nombre: 'Licencia Empresarial',
     descripcion: 'Solución completa para empresas.',
     descripcionCompleta: 'Permite uso en múltiples entornos y usuarios, con soporte dedicado.',
-    imagen: 'https://via.placeholder.com/300x150?text=Licencia+Empresarial',
+    imagen: 'https://el-comarcal.es/wp-content/uploads/2025/03/netflix.jpg',
+  },
+  {
+    id: 4,
+    nombre: 'Licencia Estudiante',
+    descripcion: 'Descuentos especiales para estudiantes.',
+    descripcionCompleta: 'Acceso a todas las funciones con un precio reducido para estudiantes verificados.',
+    imagen: 'https://www.santandersmusic.com/media/magazine/spotify-2-1.jpg',
+  },
+  {
+    id: 5,
+    nombre: 'Licencia Familiar',
+    descripcion: 'Hasta 6 cuentas en un solo plan.',
+    descripcionCompleta: 'Ideal para familias, incluye todas las funciones premium.',
+    imagen: 'https://support.workiva.com/hc/article_attachments/33726798600468',
+  },
+  {
+    id: 6,
+    nombre: 'Licencia Anual',
+    descripcion: 'Ahorra con el pago anual.',
+    descripcionCompleta: 'Incluye todas las funciones premium y un descuento significativo al pagar por adelantado.',
+    imagen: 'https://el-comarcal.es/wp-content/uploads/2025/03/netflix.jpg',
   },
 ];
 

@@ -1,7 +1,4 @@
-
-require('dotenv').config();
-
-export const API_URL = process.env.API_URL || 'http://localhost:8000/';
+export const API_URL =  'http://localhost:8000/';
 export async function GET(ruta, params = {}, token) {
   const url = new URL(API_URL + ruta);
   Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));

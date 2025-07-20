@@ -2,3 +2,18 @@
   margin: auto;
   text-align: center;
 }
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-layout {
+  position: relative;
+}
+
+.page-content {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #121212;
+}

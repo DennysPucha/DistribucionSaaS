@@ -1,4 +1,4 @@
-import './styles.css';
+import './login.css';
 import iconMetamask from '../../public/iconMetamask.png';
 import { BrowserProvider } from 'ethers';
 import {POST} from '../../utils/methods/methods.js';
