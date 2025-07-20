@@ -1,0 +1,85 @@
+/* Login.css */
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .login-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 1.2s ease-in;
+  }
+  
+  .login-box {
+    background-color: #1c1c1c;
+    padding: 3rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    text-align: center;
+    animation: popUp 0.8s ease-out;
+  }
+  
+  .login-title {
+    color: #00ffff;
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .login-subtitle {
+    color: #cccccc;
+    margin-bottom: 2rem;
+  }
+  
+  .metamask-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: #2a2a2a;
+    border: 2px solid #00ffff;
+    border-radius: 12px;
+    padding: 0.8rem 1.5rem;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+  
+  .metamask-button:hover {
+    background: #00ffff;
+    color: #000000;
+    transform: scale(1.05);
+  }
+  
+  .metamask-button img {
+    height: 30px;
+    width: 30px;
+  }
+  
+  /* Animaciones */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes popUp {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
