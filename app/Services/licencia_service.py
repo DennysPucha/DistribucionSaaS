@@ -54,7 +54,7 @@ def revocar_licencia(db: Session, licencia_id: int):
     if not db_licencia:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Licencia no encontrada")
 
-    db_licencia.estado = EstadoLicencia.Revocada
+    db_licencia.estadoLicencia = EstadoLicencia.Revocada
     db.commit()
     db.refresh(db_licencia)
 

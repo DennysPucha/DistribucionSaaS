@@ -8,7 +8,7 @@ class Licencia(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     clave_licencia = Column(String(255), unique=True, index=True, nullable=False)
-    estado = Column(Enum(EstadoLicencia), nullable=False, default=EstadoLicencia.Activa)
+    estadoLicencia = Column(Enum(EstadoLicencia), nullable=False, default=EstadoLicencia.Activa)
     fecha_emision = Column(Date, nullable=False)
     fecha_expiracion = Column(Date, nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))

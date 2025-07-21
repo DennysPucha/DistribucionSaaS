@@ -5,7 +5,7 @@ from app.Model.enums import EstadoLicencia
 
 class LicenciaBase(BaseModel):
     clave_licencia: str
-    estado: EstadoLicencia
+    estadoLicencia: EstadoLicencia
     fecha_emision: date
     fecha_expiracion: date
     usuario_id: int
@@ -16,7 +16,7 @@ class LicenciaCreate(BaseModel):
     dias_de_validez: int = 365
 
 class LicenciaUpdate(BaseModel):
-    estado: EstadoLicencia
+    estadoLicencia: EstadoLicencia
 
 class Licencia(LicenciaBase):
     id: int

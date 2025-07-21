@@ -4,6 +4,9 @@ from typing import List, Optional
 class ContratoBase(BaseModel):
     nombre_saas: str
     terminos: str
+    tipo: str
+    img: str
+    descripcion: str
 
 class ContratoCreate(ContratoBase):
     pass
