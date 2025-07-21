@@ -9,3 +9,4 @@ class TipoTransaccion(str, Enum):
     Emision = "Emision"
     Validacion = "Validacion"
     Revocacion = "Revocacion"
+    Expiracion = "Expiracion"

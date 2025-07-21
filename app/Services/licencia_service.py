@@ -9,6 +9,8 @@ from app.Model.enums import EstadoLicencia, TipoTransaccion
 from fastapi import HTTPException, status
 from datetime import date, timedelta
 import uuid
+from app.Observers.notification_service import licencia_notifier
+from app.States.licencia_states import StateFactory
 
 def get_licencia(db: Session, licencia_id: int):
     return db.query(Licencia).filter(Licencia.id == licencia_id).first()
@@ -31,7 +33,7 @@ def emitir_licencia(db: Session, licencia: LicenciaCreate):
 
     db_licencia = Licencia(
         clave_licencia=clave,
-        estado=EstadoLicencia.Activa,
+        estadoLicencia=EstadoLicencia.Activa,
         fecha_emision=fecha_emision,
         fecha_expiracion=fecha_expiracion,
         usuario_id=licencia.usuario_id,
@@ -47,6 +49,9 @@ def emitir_licencia(db: Session, licencia: LicenciaCreate):
         licencia_id=db_licencia.id
     ))
 
+    # Notificar a los observadores
+    licencia_notifier.notify("licencia_emitida", db_licencia)
+
     return db_licencia
 
 def revocar_licencia(db: Session, licencia_id: int):
@@ -54,14 +59,14 @@ def revocar_licencia(db: Session, licencia_id: int):
     if not db_licencia:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Licencia no encontrada")
 
-    db_licencia.estadoLicencia = EstadoLicencia.Revocada
+    # Obtener el estado actual y delegar la acción
+    state = StateFactory.get_state(db_licencia.estadoLicencia)
+    state.revocar(db_licencia, db)
+
     db.commit()
     db.refresh(db_licencia)
 
-    create_transaccion(db, TransaccionCreate(
-        fecha=date.today(),
-        tipo=TipoTransaccion.Revocacion,
-        licencia_id=db_licencia.id
-    ))
+    # Notificar a los observadores
+    licencia_notifier.notify("licencia_revocada", db_licencia)
 
     return db_licencia
