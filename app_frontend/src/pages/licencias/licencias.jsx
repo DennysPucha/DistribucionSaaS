@@ -49,6 +49,7 @@ const licenciasData = [
 function Licencias() {
   const [modalActivo, setModalActivo] = useState(false);
   const [licenciaSeleccionada, setLicenciaSeleccionada] = useState(null);
+  const [indiceCarrusel, setIndiceCarrusel] = useState(0);
 
   const abrirModal = (licencia) => {
     setLicenciaSeleccionada(licencia);
@@ -60,9 +61,34 @@ function Licencias() {
     setModalActivo(false);
   };
 
+  const siguiente = () => {
+    setIndiceCarrusel((prev) => (prev + 1) % licenciasData.length);
+  };
+
+  const anterior = () => {
+    setIndiceCarrusel((prev) =>
+      prev === 0 ? licenciasData.length - 1 : prev - 1
+    );
+  };
+
+  const licenciaCarrusel = licenciasData[indiceCarrusel];
+
   return (
     <div className="licencias-container">
       <h1 className="titulo">Licencias Disponibles</h1>
+
+      {/* Carrusel */}
+      <div className="carrusel-container">
+        <button className="carrusel-btn carrusel-anterior" onClick={anterior}>❮</button>
+        <div className="carrusel-item" onClick={() => abrirModal(licenciaCarrusel)}>
+          <img src={licenciaCarrusel.imagen} alt={licenciaCarrusel.nombre} className="carrusel-imagen" />
+          <h2 className="carrusel-nombre">{licenciaCarrusel.nombre}</h2>
+          <p className="carrusel-descripcion">{licenciaCarrusel.descripcion}</p>
+        </div>
+        <button className="carrusel-btn carrusel-siguiente" onClick={siguiente}>❯</button>
+      </div>
+
+      {/* Grid de tarjetas */}
       <div className="tarjetas-grid">
         {licenciasData.map((licencia) => (
           <div
@@ -77,6 +103,7 @@ function Licencias() {
         ))}
       </div>
 
+      {/* Modal */}
       {modalActivo && licenciaSeleccionada && (
         <div className="modal-overlay" onClick={cerrarModal}>
           <div className="modal-contenido" onClick={(e) => e.stopPropagation()}>
