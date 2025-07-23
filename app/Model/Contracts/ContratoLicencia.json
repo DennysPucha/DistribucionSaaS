@@ -1,0 +1,369 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_usuario",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_index",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_diasExtra",
+				"type": "uint256"
+			}
+		],
+		"name": "ampliarLicencia",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_index",
+				"type": "uint256"
+			}
+		],
+		"name": "cancelarLicenciaPropia",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_usuario",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_claveLicencia",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_diasDuracion",
+				"type": "uint256"
+			}
+		],
+		"name": "emitirLicencia",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "usuario",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "nuevaFecha",
+				"type": "uint256"
+			}
+		],
+		"name": "LicenciaAmpliada",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "usuario",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "LicenciaCancelada",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "usuario",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "claveLicencia",
+				"type": "string"
+			}
+		],
+		"name": "LicenciaEmitida",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "usuario",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "LicenciaRevocada",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "usuario",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "claveLicencia",
+				"type": "string"
+			}
+		],
+		"name": "LicenciaSubidaDesdeBD",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_usuario",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_index",
+				"type": "uint256"
+			}
+		],
+		"name": "revocarLicencia",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_usuario",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_claveLicencia",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_fechaEmision",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_fechaExpiracion",
+				"type": "uint256"
+			},
+			{
+				"internalType": "enum ContratoLicencia.EstadoLicencia",
+				"name": "_estado",
+				"type": "uint8"
+			}
+		],
+		"name": "subirLicenciaDesdeBD",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "licenciasPorUsuario",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "claveLicencia",
+				"type": "string"
+			},
+			{
+				"internalType": "enum ContratoLicencia.EstadoLicencia",
+				"name": "estado",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint256",
+				"name": "fechaEmision",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "fechaExpiracion",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_usuario",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_index",
+				"type": "uint256"
+			}
+		],
+		"name": "obtenerLicencia",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "claveLicencia",
+				"type": "string"
+			},
+			{
+				"internalType": "enum ContratoLicencia.EstadoLicencia",
+				"name": "estado",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint256",
+				"name": "fechaEmision",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "fechaExpiracion",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_usuario",
+				"type": "address"
+			}
+		],
+		"name": "obtenerTodasLicencias",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "claveLicencia",
+						"type": "string"
+					},
+					{
+						"internalType": "enum ContratoLicencia.EstadoLicencia",
+						"name": "estado",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "fechaEmision",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "fechaExpiracion",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct ContratoLicencia.Licencia[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_usuario",
+				"type": "address"
+			}
+		],
+		"name": "totalLicencias",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
