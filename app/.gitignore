@@ -1,0 +1,25 @@
+.env
+__pycache__/
+*.pyc
+
+core/__pycache__/
+core/*.pyc
+
+Model/__pycache__/
+
+Model/*.pyc
+
+Observers/__pycache__/
+Observers/*.pyc
+
+Routers/__pycache__/
+Routers/*.pyc
+
+Schemas/__pycache__/
+Schemas/*.pyc
+
+Services /__pycache__/
+Services/*.pyc
+
+States/__pycache__/
+States/*.pyc
