@@ -12,8 +12,8 @@ class Licencia(Base):
     fecha_emision = Column(Date, nullable=False)
     fecha_expiracion = Column(Date, nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
-    contrato_id = Column(Integer, ForeignKey("contratos.id"))
+    oferta_licencia_id = Column(Integer, ForeignKey("ofertas_licencia.id"))
 
     usuario = relationship("Usuario", back_populates="licencias")
-    contrato = relationship("Contrato", back_populates="licencias")
-    transacciones = relationship("Transaccion", back_populates="licencia")
+    oferta_licencia = relationship("OfertaLicencia", back_populates="licencias")
+    

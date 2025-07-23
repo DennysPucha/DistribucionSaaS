@@ -9,10 +9,11 @@ class LicenciaBase(BaseModel):
     fecha_emision: date
     fecha_expiracion: date
     usuario_id: int
+    oferta_licencia_id: int
 
 class LicenciaCreate(BaseModel):
     usuario_id: int
-    contrato_id: int
+    oferta_licencia_id: int
     dias_de_validez: int = 365
 
 class LicenciaUpdate(BaseModel):

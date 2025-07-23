@@ -5,7 +5,3 @@ class EstadoLicencia(str, Enum):
     Revocada = "Revocada"
     Expirada = "Expirada"
 
-class TipoTransaccion(str, Enum):
-    Emision = "Emision"
-    Validacion = "Validacion"
-    Revocacion = "Revocacion"
