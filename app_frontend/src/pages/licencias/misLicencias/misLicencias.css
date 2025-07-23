@@ -1,0 +1,56 @@
+.mis-licencias-container {
+    padding: 2rem;
+    background-color: #121212;
+    color: #fff;
+    font-family: Arial, sans-serif;
+  }
+  
+  .lista-licencias {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .encabezado,
+  .fila {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    padding: 1rem;
+    border-radius: 10px;
+    background-color: #1e1e1e;
+  }
+  
+  .encabezado {
+    background-color: #292929;
+    font-weight: bold;
+  }
+  
+  .badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .badge-activo {
+    background-color: #28a745;
+  }
+  
+  .badge-expirado {
+    background-color: #dc3545;
+  }
+  
+  .badge-suspendido {
+    background-color: #ffc107;
+    color: #000;
+  }
+  
+  .wallet {
+    font-size: 0.85rem;
+    color: #ccc;
+    word-break: break-word;
+  }
+  

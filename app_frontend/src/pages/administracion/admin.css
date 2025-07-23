@@ -4,18 +4,20 @@ body {
     background: #121212;
     color: #fff;
   }
-  
+
   .admin-panel {
     padding: 2rem;
   }
   
-  header {
+  .head {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    max-width: 1500px;
+    margin: 2rem auto 0 auto;
   }
   
   .crear-btn {
+    margin-left: auto;
     background-color: #1f80e0;
     color: white;
     border: none;
@@ -26,21 +28,31 @@ body {
   
   .licencias-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
+    column-gap: 2.5rem;
+    max-width: 1500px;
+    margin: 0 auto 0 auto;
   }
   
   .licencia-card {
+    display: flex;
     background-color: #1e1e1e;
     padding: 1rem;
     border-radius: 10px;
     text-align: center;
+    align-items: center;
+    gap: 8em;
+    margin-top: 25px;
+    max-height: 70px;
+  
+    && span {
+      width: 150px;
+    }
   }
   
   .licencia-card img {
-    width: 100%;
-    height: 150px;
+    width: 40%;
+    height: 70px;
     object-fit: cover;
     border-radius: 8px;
   }
@@ -51,6 +63,10 @@ body {
     padding: 0.2rem 0.5rem;
     border-radius: 5px;
     font-size: 0.9rem;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .estado.disponible {
@@ -69,15 +85,6 @@ body {
     cursor: pointer;
   }
   
-  .acciones button:first-child {
-    background-color: #ffc107;
-    color: black;
-  }
-  
-  .acciones button:last-child {
-    background-color: #dc3545;
-    color: white;
-  }
   
   .formulario {
     display: flex;

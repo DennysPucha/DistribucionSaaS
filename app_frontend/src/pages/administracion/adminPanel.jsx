@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import LicenciaForm from '../componentes/licenciaForm';
 import LicenciaCard from '../componentes/licenciaCard';
 import Modal from '../componentes/modal';
+import DarkButton from '../componentes/botones/DarkButton';
 import './admin.css';
 
 const initialLicencias = [
@@ -11,6 +12,16 @@ const initialLicencias = [
     descripcionCorta: 'Uso profesional',
     descripcionLarga: 'Licencia completa para uso profesional y empresarial.',
     imagen: 'https://www.santandersmusic.com/media/magazine/spotify-2-1.jpg',
+    precio: 99.99,
+    duracion: 365,
+    disponible: true,
+  },
+  {
+    id: 2,
+    nombre: 'Licencia Pro',
+    descripcionCorta: 'Uso profesional',
+    descripcionLarga: 'Licencia completa para uso profesional y empresarial.',
+    imagen: 'https://el-comarcal.es/wp-content/uploads/2025/03/netflix.jpg',
     precio: 99.99,
     duracion: 365,
     disponible: true,
@@ -49,11 +60,11 @@ function AdminPanel() {
 
   return (
     <div className="admin-panel">
-      <header>
+      <header className='head'>
         <h1>Panel de Administración de Licencias</h1>
-        <button className="crear-btn" onClick={() => setModalAbierto(true)}>
+        <DarkButton className="crear-btn" onClick={() => setModalAbierto(true)}>
           + Nueva Licencia
-        </button>
+        </DarkButton>
       </header>
 
       <div className="licencias-grid">

@@ -1,4 +1,5 @@
 import React from 'react';
+import DarkButton from './botones/DarkButton';
 
 function LicenciaCard({ licencia, onEditar, onEliminar }) {
   return (
@@ -10,8 +11,8 @@ function LicenciaCard({ licencia, onEditar, onEliminar }) {
         {licencia.disponible ? 'Disponible' : 'No disponible'}
       </span>
       <div className="acciones">
-        <button onClick={onEditar}>Editar</button>
-        <button onClick={onEliminar}>Eliminar</button>
+        <DarkButton variant="secondary" onClick={onEditar}>Editar</DarkButton>
+        <DarkButton variant="danger" onClick={onEliminar}>Eliminar</DarkButton>
       </div>
     </div>
   );
