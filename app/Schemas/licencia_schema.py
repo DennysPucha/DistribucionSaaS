@@ -10,6 +10,7 @@ class LicenciaBase(BaseModel):
     fecha_expiracion: date
     usuario_id: int
     oferta_licencia_id: int
+    blockchain_index: Optional[int] = None
 
 class LicenciaCreate(BaseModel):
     usuario_id: int
@@ -18,6 +19,9 @@ class LicenciaCreate(BaseModel):
 
 class LicenciaUpdate(BaseModel):
     estadoLicencia: EstadoLicencia
+
+class AmpliarLicenciaRequest(BaseModel):
+    dias_extra: int
 
 class Licencia(LicenciaBase):
     id: int
@@ -35,3 +39,9 @@ class LicenciaListResponse(BaseModel):
     licencias: List[Licencia]
     code: int
     message: str
+
+class LicenciaBlockchainResponse(BaseModel):
+    clave_licencia: str
+    estado: str
+    fecha_emision: date
+    fecha_expiracion: date

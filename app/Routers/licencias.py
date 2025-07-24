@@ -54,3 +54,27 @@ def revocar_licencia_endpoint(licencia_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         raise Exception(f"Error al revocar licencia: {str(e)}")
     return {"licencia": licencia_revocada, "code": status.HTTP_200_OK, "message": "Licencia revocada correctamente"}
+
+@router.put("/{licencia_id}/ampliar", response_model=licencia_schema.LicenciaResponse)
+def ampliar_licencia_endpoint(licencia_id: int, data: licencia_schema.AmpliarLicenciaRequest, db: Session = Depends(get_db)):
+    try:
+        licencia_ampliada = licencia_service.ampliar_licencia(db, licencia_id, data)
+        if not licencia_ampliada:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Licencia no encontrada")
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise Exception(f"Error al ampliar licencia: {str(e)}")
+    return {"licencia": licencia_ampliada, "code": status.HTTP_200_OK, "message": "Licencia ampliada correctamente"}
+
+@router.get("/blockchain/{usuario_id}/{licencia_index}", response_model=licencia_schema.LicenciaBlockchainResponse)
+def get_licencia_from_blockchain_endpoint(usuario_id: int, licencia_index: int, db: Session = Depends(get_db)):
+    try:
+        licencia = licencia_service.get_licencia_from_blockchain(usuario_id, licencia_index, db)
+        if not licencia:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Licencia no encontrada en la blockchain")
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise Exception(f"Error al obtener licencia de la blockchain: {str(e)}")
+    return licencia

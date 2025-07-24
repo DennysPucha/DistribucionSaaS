@@ -13,6 +13,7 @@ class Licencia(Base):
     fecha_expiracion = Column(Date, nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
     oferta_licencia_id = Column(Integer, ForeignKey("ofertas_licencia.id"))
+    blockchain_index = Column(Integer, nullable=True) # Índice en el array de licencias del contrato
 
     usuario = relationship("Usuario", back_populates="licencias")
     oferta_licencia = relationship("OfertaLicencia", back_populates="licencias")
