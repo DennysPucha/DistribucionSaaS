@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/login/login';
 import Licencias from './pages/licencias/licencias';
 import AdminPanel from './pages/administracion/adminPanel';
+import NotFound from './pages/componentes/404';
 import Topbar from './pages/topBar/topbar';
 import AdminLicencias from './pages/administracion/adminLicencias/adminLicencias';
 import MisLicencias from './pages/licencias/misLicencias/misLicencias';
@@ -11,6 +12,8 @@ import PerfilUsuario from './pages/licencias/perfilUsuario/perfilUsuario';
 import SpecialTopbar from './pages/topBar/especialTopBar/specialTopbar';
 import SidebarAdmin from './pages/sidebar/SidebarAdmin/SidebarAdmin';
 import SidebarUsuario from './pages/sidebar/SidebarUser/SidebarUser';
+import ProtectedRoute from './pages/componentes/proteccionRutas/rutaprotejida';
+import RedirectByRole from './pages/componentes/proteccionRutas/redirectByRol';
 function App() {
   const [sidebarAbierto, setSidebarAbierto] = useState(false);
   const toggleButtonRef = useRef(null);
@@ -19,10 +22,14 @@ function App() {
     <Router>
       <div className="app-container">
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
+          <Route path="/" element={<RedirectByRole/>} />
+          <Route path="/login" element={<Login />} />
+          
           <Route
             path="/licencias"
             element={
+              <ProtectedRoute allowedRoles={[2]}>
               <div className="main-layout">
                 <Topbar onToggleSidebar={() => setSidebarAbierto(!sidebarAbierto)}
                   toggleButtonRef={toggleButtonRef}
@@ -33,11 +40,13 @@ function App() {
                 </div>
 
               </div>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/User/mis-licencias"
             element={
+              <ProtectedRoute allowedRoles={[2]}>
               <div className="main-layout">
                 <Topbar onToggleSidebar={() => setSidebarAbierto(!sidebarAbierto)}
                   toggleButtonRef={toggleButtonRef}
@@ -47,11 +56,13 @@ function App() {
                   <MisLicencias />
                 </div>
               </div>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/User/perfil-usuario"
             element={
+              <ProtectedRoute allowedRoles={[2]}>
               <div className="main-layout">
                 <SpecialTopbar onToggleSidebar={() => setSidebarAbierto(!sidebarAbierto)}
                   toggleButtonRef={toggleButtonRef}
@@ -61,11 +72,13 @@ function App() {
                   <PerfilUsuario />
                 </div>
               </div>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/admin"
             element={
+              <ProtectedRoute allowedRoles={[1]}>
               <div className="main-layout">
                 <Topbar onToggleSidebar={() => setSidebarAbierto(!sidebarAbierto)}
                   toggleButtonRef={toggleButtonRef}
@@ -75,11 +88,14 @@ function App() {
                   <AdminPanel />
                 </div>
               </div>
+              </ProtectedRoute>
             }
+            
           />
           <Route
             path="/admin/licencias-emitidas"
             element={
+              <ProtectedRoute allowedRoles={[1]}>
               <div className="main-layout">
                 <Topbar onToggleSidebar={() => setSidebarAbierto(!sidebarAbierto)}
                   toggleButtonRef={toggleButtonRef}
@@ -89,7 +105,9 @@ function App() {
                   <AdminLicencias />
                 </div>
               </div>
+              </ProtectedRoute>
             }
+
           />
         </Routes>
       </div>

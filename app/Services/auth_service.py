@@ -40,7 +40,7 @@ def login_with_wallet(address: str, signature: str, nonce: str, db: Session):
         db.refresh(user)
 
     # 3. Crear token JWT
-    token = create_access_token(data={"sub": user.id, "direccion_wallet": address})
+    token = create_access_token(data={"sub": user.id, "direccion_wallet": address, "rol_id": user.rol_id})
     print(f"Token JWT creado: {token}")
     # 4. Retornar el token
     if not token:
