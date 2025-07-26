@@ -7,12 +7,14 @@ class OfertaLicenciaBase(BaseModel):
     tipo: str
     img: str
     descripcion: str
+    state: bool = True
 
 class OfertaLicenciaCreate(OfertaLicenciaBase):
-    pass
+    usuario_id: int
 
 class OfertaLicencia(OfertaLicenciaBase):
     id: int
+    usuario_id: int
 
     model_config = {
         "from_attributes": True

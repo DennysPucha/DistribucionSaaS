@@ -13,3 +13,4 @@ class Usuario(Base):
 
     rol = relationship("Rol")
     licencias = relationship("Licencia", back_populates="usuario")
+    ofertas_licencia = relationship("OfertaLicencia", back_populates="usuario")

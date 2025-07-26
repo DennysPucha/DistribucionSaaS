@@ -42,3 +42,65 @@ def read_oferta_licencia(oferta_licencia_id: int, db: Session = Depends(get_db))
     except Exception as e:
         raise Exception(f"Error al obtener oferta de licencia: {str(e)}")
     return {"oferta_licencia": oferta_licencia, "code": status.HTTP_200_OK, "message": "Oferta de licencia obtenida correctamente"}
+
+@router.delete("/{oferta_licencia_id}", response_model=oferta_licencia_schema.OfertaLicenciaResponse)
+def deactivate_oferta_licencia(oferta_licencia_id: int, db: Session = Depends(get_db)):
+    try:
+        oferta_licencia = oferta_licencia_service.deactivate_oferta_licencia(db, oferta_licencia_id)
+        if not oferta_licencia:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Oferta de licencia no encontrada")
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise Exception(f"Error al desactivar oferta de licencia: {str(e)}")
+    return {"oferta_licencia": oferta_licencia, "code": status.HTTP_200_OK, "message": "Oferta de licencia desactivada correctamente"}
+
+
+@router.get("/usuario/{usuario_id}", response_model=oferta_licencia_schema.OfertaLicenciaListResponse)
+def read_ofertas_licencia_by_user(usuario_id: int, db: Session = Depends(get_db)):
+    try:
+        ofertas_licencia = oferta_licencia_service.get_oferta_licencia_by_user_id(db, usuario_id=usuario_id)
+        if not ofertas_licencia:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontraron ofertas de licencia para este usuario")
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise Exception(f"Error al obtener ofertas de licencia por usuario: {str(e)}")
+    return {"ofertas_licencia": ofertas_licencia, "code": status.HTTP_200_OK, "message": "Ofertas de licencia obtenidas correctamente"}
+
+
+@router.put("/{oferta_licencia_id}", response_model=oferta_licencia_schema.OfertaLicenciaResponse)
+def update_oferta_licencia(oferta_licencia_id: int, oferta_licencia: oferta_licencia_schema.OfertaLicenciaCreate, db: Session = Depends(get_db)):
+    try:
+        updated_oferta_licencia = oferta_licencia_service.update_oferta_licencia(db, oferta_licencia_id=oferta_licencia_id, oferta_licencia_data=oferta_licencia)
+        if not updated_oferta_licencia:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Oferta de licencia no encontrada")
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise Exception(f"Error al actualizar oferta de licencia: {str(e)}")
+    return {"oferta_licencia": updated_oferta_licencia, "code": status.HTTP_200_OK, "message": "Oferta de licencia actualizada correctamente"}
+
+@router.delete("/{oferta_licencia_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_oferta_licencia(oferta_licencia_id: int, db: Session = Depends(get_db)):
+    try:
+        result = oferta_licencia_service.delete_oferta_licencia(db, oferta_licencia_id=oferta_licencia_id)
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Oferta de licencia no encontrada")
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise Exception(f"Error al eliminar oferta de licencia: {str(e)}")
+    return {"code": status.HTTP_204_NO_CONTENT, "message": "Oferta de licencia eliminada correctamente"}
+
+@router.get("/nombre/{nombre_saas}", response_model=oferta_licencia_schema.OfertaLicenciaResponse)
+def read_oferta_licencia_by_name(nombre_saas: str, db: Session = Depends(get_db)):
+    try:
+        oferta_licencia = oferta_licencia_service.get_oferta_licencia_by_name(db, nombre_saas=nombre_saas)
+        if not oferta_licencia:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Oferta de licencia no encontrada")
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise Exception(f"Error al obtener oferta de licencia por nombre: {str(e)}")
+    return {"oferta_licencia": oferta_licencia, "code": status.HTTP_200_OK, "message": "Oferta de licencia obtenida correctamente"}
