@@ -10,6 +10,10 @@ class UsuarioBase(BaseModel):
 class UsuarioCreate(UsuarioBase):
     pass
 
+class UsuarioCompletarPerfil(BaseModel):
+    nombre: str
+    correo: EmailStr
+
 class UsuarioUpdate(BaseModel):
     nombre: Optional[str] = None
     correo: Optional[EmailStr] = None

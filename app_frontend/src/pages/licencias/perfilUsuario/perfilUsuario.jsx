@@ -1,45 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import "./perfilUsuario.css";
 import DarkButton from "../../componentes/botones/DarkButton";
+import { completarPerfilUsuario } from "../../../hooks/usuario";
+import AlertaOscura from "../../componentes/alertas/alertaOscura";
+import { useGetCurrentUser } from "../../../hooks/usuario";
+
+const schema = yup.object().shape({
+  nombre: yup.string().required("El nombre es requerido"),
+  correo: yup.string().email("El correo no es válido").required("El correo es requerido"),
+});
 
 const PerfilUsuario = () => {
-  const [nombre, setNombre] = useState("Carlos Rodríguez");
-  const [correo, setCorreo] = useState("carlos@example.com");
-  const [mensaje, setMensaje] = useState("");
+  const { dataSession, refetch } = useGetCurrentUser();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-  const guardarCambios = () => {
-    // Aquí podrías hacer una petición a una API si fuera real
-    setMensaje("Cambios guardados correctamente.");
-    setTimeout(() => setMensaje(""), 3000); // Limpia mensaje después de 3 segundos
+  useEffect(() => {
+    if (dataSession) {
+      setValue("nombre", dataSession.nombre? dataSession.nombre : '');
+      setValue("correo", dataSession.correo? dataSession.correo : '');
+    }
+  }, [dataSession, setValue]);
+
+  const [alerta, setAlerta] = useState({ visible: false, mensaje: '', tipo: 'info' });
+
+  const mostrarAlerta = (mensaje, tipo = 'info') => {
+    setAlerta({ visible: true, mensaje, tipo });
+  };
+
+  const cerrarAlerta = () => {
+    setAlerta({ ...alerta, visible: false });
+  };
+
+  const onSubmit = async (data) => {
+    try {
+      console.log("Datos del formulario:", data);
+      const response = await completarPerfilUsuario(data);
+      if (response.code === 200) {
+        mostrarAlerta("Perfil actualizado correctamente", "success");
+        refetch();
+      } else {
+        mostrarAlerta("Error al actualizar el perfil: " + response.statusText, "error");
+      }
+    } catch (error) {
+      console.error("Error al completar el perfil:", error);
+      mostrarAlerta("Error al completar el perfil", "error");
+    }
   };
 
   return (
     <div className="perfil-container">
       <h2>Mi Perfil</h2>
-      <div className="formulario-perfil">
+      <form onSubmit={handleSubmit(onSubmit)} className="formulario-perfil">
         <label>
           Nombre
           <input
-            type="text"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            {...register("nombre")}
           />
+          {errors.nombre && <p>{errors.nombre.message}</p>}
         </label>
         <label>
           Correo electrónico
           <input
-            type="email"
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
+            {...register("correo")}
           />
+          {errors.correo && <p>{errors.correo.message}</p>}
         </label>
-        <DarkButton variant="primary" onClick={guardarCambios}>
+        <DarkButton variant="primary" type="submit">
           Guardar cambios
         </DarkButton>
-        {mensaje && <p className="mensaje">{mensaje}</p>}
-      </div>
+
+        {alerta.visible && (
+          <AlertaOscura
+            mensaje={alerta.mensaje}
+            tipo={alerta.tipo}
+            onClose={cerrarAlerta}
+          />
+        )}
+      </form>
     </div>
   );
 };
+
 
 export default PerfilUsuario;

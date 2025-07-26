@@ -13,7 +13,7 @@ export function useGetOfertaLicencias() {
       try {
         const response = await GET('ofertas-licencia', {}, token);
         if (response.code === 200) {
-          // console.log("Licencias obtenidas:", response);
+          console.log("Licencias obtenidas:", response);
           setLicencias(response.ofertas_licencia || []);
         } else {
           console.error("Error fetching licencias:", response.statusText);

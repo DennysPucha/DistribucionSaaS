@@ -3,11 +3,29 @@ import { useNavigate } from 'react-router-dom';
 import './SidebarUser.css';
 import { clearSession } from '../../../utils/methods/session';
 import AlertaOscura from '../../componentes/alertas/alertaOscura';
+import { getDataFromSession } from '../../../utils/methods/session';
 
 function SidebarUsuario({ abierto, setAbierto }) {
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
   const [alerta, setAlerta] = useState({ visible: false, mensaje: '', tipo: 'error' });
+  const [dataSession, setDataSession] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getDataFromSession();
+        if (data) {
+          setDataSession(data);
+        } else {
+          console.error("No se pudo obtener la información de la sesión");
+        }
+      } catch (error) {
+        console.error("Error al obtener los datos de la sesión:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const mostrarAlerta = (mensaje) => {
     setAlerta({ visible: true, mensaje, tipo: 'error' });
@@ -82,7 +100,7 @@ function SidebarUsuario({ abierto, setAbierto }) {
 
         <div className="profile-section">
           <img className="profile-image" src="https://static.vecteezy.com/system/resources/thumbnails/029/621/646/small_2x/hacker-with-laptop-hacking-computer-system-isolated-on-transparent-background-png.png" alt="Usuario" />
-          <div className="wallet-address">0xUSER456...XYZ</div>
+          <div className="wallet-address">{dataSession.direccion_wallet}</div>
         </div>
 
         <div className="sidebar-buttons">

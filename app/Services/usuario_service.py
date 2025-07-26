@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from app.Model.usuario import Usuario
-from app.Schemas.usuario_schema import UsuarioCreate
+from app.Schemas.usuario_schema import UsuarioCreate, UsuarioCompletarPerfil
 
 def crear_usuario(db: Session, usuario: UsuarioCreate):
     # Verificar si el usuario ya existe
@@ -17,3 +17,22 @@ def crear_usuario(db: Session, usuario: UsuarioCreate):
 def obtener_usuarios(db: Session):
     usuarios = db.query(Usuario).all()
     return usuarios
+
+def completar_perfil(db: Session, usuario_id: int, datos_perfil: UsuarioCompletarPerfil):
+    usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+    if not usuario:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+    
+    for key, value in datos_perfil.dict().items():
+        setattr(usuario, key, value)
+    
+    db.commit()
+    db.refresh(usuario)
+    return usuario
+
+def obtener_usuario(db: Session, usuario_id: int):
+    usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+    if not usuario:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+
+    return usuario

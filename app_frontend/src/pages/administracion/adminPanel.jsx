@@ -7,6 +7,7 @@ import './admin.css';
 import { useGetOfertaLicenciasByUser, deleteOfertaLicencia } from '../../hooks/ofertaLicencias';
 import { getDataFromSession } from '../../utils/methods/session';
 import AlertaOscura from '../componentes/alertas/alertaOscura';
+import ConfirmacionOscura from '../componentes/alertas/confirmacionOscura';
 //data 
 // nombre_saas: 'Netflix',
 // terminos: 'Uso profesional',
@@ -24,6 +25,33 @@ function AdminPanel() {
   const cerrarAlerta = () => {
     setAlerta({ ...alerta, visible: false });
   };
+
+  const [confirmacion, setConfirmacion] = useState({ visible: false, mensaje: '', onConfirm: null });
+
+  const mostrarConfirmacion = (mensaje, onConfirm) => {
+    setConfirmacion({ visible: true, mensaje, onConfirm });
+  }
+  const cerrarConfirmacion = () => {
+    setConfirmacion({ ...confirmacion, visible: false });
+  };
+
+  const handleEliminar = async (licenciaId) => {
+    try {
+      mostrarConfirmacion("¿Estás seguro de que deseas eliminar esta licencia?", async () => {
+        const response = await deleteOfertaLicencia(licenciaId);
+        if (response.code === 200) {
+          mostrarAlerta("Licencia eliminada correctamente", "success");
+          refetch(); // Refrescar la lista de licencias
+        } else {
+          mostrarAlerta("Error al eliminar la licencia: " + response.statusText, "error");
+        }
+      });
+    }
+    catch (error) {
+      console.error("Error al eliminar la licencia:", error);
+      mostrarAlerta("Error al eliminar la licencia", "error");
+    }
+  }
 
 
   useEffect(() => {
@@ -73,21 +101,7 @@ function AdminPanel() {
               setLicenciaSeleccionada(licencia);
               mostrarAlerta("Editando licencia: " + licencia.nombre_saas, "info");
             }}
-            onEliminar={async () => {
-              try {
-                const response = await deleteOfertaLicencia(licencia.id);
-                if (response.code == 200) {
-                  refetch();
-                  mostrarAlerta("Licencia eliminada correctamente", "success");
-                }
-                else {
-                  mostrarAlerta("Error al eliminar la licencia: " + response.statusText, "error");
-                }
-              } catch (error) {
-                console.error("Error al eliminar la licencia:", error);
-                mostrarAlerta("Error al eliminar la licencia", "error");
-              }
-            }}
+            onEliminar={() => handleEliminar(licencia.id)}
           />
         ))}
       </div>
@@ -97,6 +111,18 @@ function AdminPanel() {
         mensaje={alerta.mensaje}
         tipo={alerta.tipo}
         onClose={cerrarAlerta}
+      />
+
+      <ConfirmacionOscura
+        visible={confirmacion.visible}
+        mensaje={confirmacion.mensaje}
+        onConfirm={() => {
+          if (confirmacion.onConfirm) {
+            confirmacion.onConfirm();
+          }
+          cerrarConfirmacion();
+        }}
+        onCancel={cerrarConfirmacion}
       />
 
       {modalAbierto && (
