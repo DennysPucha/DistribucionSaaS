@@ -23,8 +23,6 @@ def create_oferta_licencia(oferta_licencia: oferta_licencia_schema.OfertaLicenci
 def read_ofertas_licencia(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     try:
         ofertas_licencia = oferta_licencia_service.get_ofertas_licencia(db, skip=skip, limit=limit)
-        if not ofertas_licencia:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontraron ofertas de licencia")
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:
@@ -60,8 +58,6 @@ def deactivate_oferta_licencia(oferta_licencia_id: int, db: Session = Depends(ge
 def read_ofertas_licencia_by_user(usuario_id: int, db: Session = Depends(get_db)):
     try:
         ofertas_licencia = oferta_licencia_service.get_oferta_licencia_by_user_id(db, usuario_id=usuario_id)
-        if not ofertas_licencia:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontraron ofertas de licencia para este usuario")
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:
@@ -81,7 +77,7 @@ def update_oferta_licencia(oferta_licencia_id: int, oferta_licencia: oferta_lice
         raise Exception(f"Error al actualizar oferta de licencia: {str(e)}")
     return {"oferta_licencia": updated_oferta_licencia, "code": status.HTTP_200_OK, "message": "Oferta de licencia actualizada correctamente"}
 
-@router.delete("/{oferta_licencia_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{oferta_licencia_id}", status_code=status.HTTP_200_OK)
 def delete_oferta_licencia(oferta_licencia_id: int, db: Session = Depends(get_db)):
     try:
         result = oferta_licencia_service.delete_oferta_licencia(db, oferta_licencia_id=oferta_licencia_id)
@@ -91,7 +87,7 @@ def delete_oferta_licencia(oferta_licencia_id: int, db: Session = Depends(get_db
         raise http_exc
     except Exception as e:
         raise Exception(f"Error al eliminar oferta de licencia: {str(e)}")
-    return {"code": status.HTTP_204_NO_CONTENT, "message": "Oferta de licencia eliminada correctamente"}
+    return {"code": status.HTTP_200_OK, "message": "Oferta de licencia eliminada correctamente"}
 
 @router.get("/nombre/{nombre_saas}", response_model=oferta_licencia_schema.OfertaLicenciaResponse)
 def read_oferta_licencia_by_name(nombre_saas: str, db: Session = Depends(get_db)):

@@ -31,8 +31,8 @@ def deactivate_oferta_licencia(db: Session, oferta_licencia_id: int):
 
 
 def get_oferta_licencia_by_user_id(db: Session, usuario_id: int):
-    return db.query(OfertaLicencia).filter(OfertaLicencia.usuario_id == usuario_id).all()
-
+    db_ofertas_licencia = db.query(OfertaLicencia).filter(OfertaLicencia.usuario_id == usuario_id, OfertaLicencia.state == True).all()
+    return db_ofertas_licencia
 
 def update_oferta_licencia(db: Session, oferta_licencia_id: int, oferta_licencia_data: OfertaLicenciaCreate):
     db_oferta_licencia = db.query(OfertaLicencia).filter(OfertaLicencia.id == oferta_licencia_id).first()
