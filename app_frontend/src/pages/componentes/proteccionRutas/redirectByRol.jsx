@@ -19,7 +19,7 @@ const RedirectByRole = () => {
     const redirigir = async () => {
       const auth = await isAuthenticated();
       if (!auth) {
-        navigate("/");
+        navigate("/login");
         return;
       }
 
@@ -29,9 +29,10 @@ const RedirectByRole = () => {
         return;
       }
 
+      console.log("Datos de sesión:", data);
       if (data.rol_id === 2) {
         navigate("/licencias");
-      } else if (data.rol_id === 3) {
+      } else if (data.rol_id === 1) {
         navigate("/admin");
       } else {
         mostrarAlerta("Rol no autorizado");

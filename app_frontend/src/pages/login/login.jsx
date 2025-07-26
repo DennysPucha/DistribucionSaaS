@@ -5,7 +5,7 @@ import { POST } from '../../utils/methods/methods.js';
 import { useNavigate } from 'react-router-dom';
 import AlertaOscura from '../componentes/alertas/alertaOscura.jsx';
 import { setSession } from '../../utils/methods/session.js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function Login() {
   const navigate = useNavigate();
@@ -34,6 +34,10 @@ function Login() {
         mostrarAlerta('Instala MetaMask', 'error');
         return;
       }
+      await window.ethereum.request({
+        method: 'wallet_requestPermissions',
+        params: [{ eth_accounts: {} }],
+      });
 
       const provider = new BrowserProvider(window.ethereum);
       await provider.send("eth_requestAccounts", []);
@@ -42,18 +46,19 @@ function Login() {
 
       const nonceResponse = await POST("auth/request-nonce", { address });
       const nonce = nonceResponse.nonce;
+
       if (!nonce) {
         mostrarAlerta('Error al obtener nonce', 'error');
         return;
       }
+
       const signature = await signer.signMessage(nonce);
       const loginRes = await POST("auth/login", { address, signature, nonce });
-
 
       if (loginRes.access_token) {
         setSession(loginRes.access_token);
         mostrarAlerta('Inicio de sesión exitoso', 'exito');
-        setTimeout(() => navigate('/licencias'), 1500);
+        setTimeout(() => navigate('/'), 1500);
       } else {
         mostrarAlerta('Error al iniciar sesión', 'error');
       }
@@ -63,6 +68,16 @@ function Login() {
     }
   };
 
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on("accountsChanged", (accounts) => {
+        if (accounts.length > 0) {
+          mostrarAlerta(`Cuenta cambiada`, 'info');
+        }
+      });
+    }
+  }, []);
+
   return (
     <div className="login-container">
       <div className="login-box">
@@ -71,7 +86,7 @@ function Login() {
 
         <div className="metamask-button" onClick={connectWallet}>
           <img src={iconMetamask} alt="MetaMask" />
-          <span>Conectar con MetaMask</span>
+          <span>Conectar / Cambiar Cuenta</span>
         </div>
 
         <div className="terminos">
@@ -84,7 +99,6 @@ function Login() {
         </div>
       </div>
 
-      {/* Mostrar alerta si está visible */}
       <AlertaOscura
         visible={alerta.visible}
         mensaje={alerta.mensaje}

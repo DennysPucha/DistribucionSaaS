@@ -1,10 +1,48 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SidebarAdmin.css';
+import AlertaOscura from '../../componentes/alertas/alertaOscura';
+import { clearSession, getDataFromSession } from '../../../utils/methods/session';
 
 function SidebarAdmin({ abierto, setAbierto }) {
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
+  const [sessionData, setSessionData] = useState({});
+  const [alerta, setAlerta] = useState({ visible: false, mensaje: '', tipo: 'error' });
+  
+  useEffect(() => {
+    const fetchSessionData = async () => {
+      try {
+        const data = await getDataFromSession();
+        if (data) {
+          setSessionData(data);
+          console.log("Datos de sesión obtenidos:", data);
+        } else {
+          mostrarAlerta("No se pudo obtener la información de la sesión");
+        }
+      } catch (error) {
+        console.error("Error al obtener los datos de la sesión:", error);
+        mostrarAlerta("Error al obtener los datos de la sesión");
+      }
+    };
+    fetchSessionData();
+  }, []);
+
+    const mostrarAlerta = (mensaje) => {
+      setAlerta({ visible: true, mensaje, tipo: 'error' });
+    };
+  
+    const cerrarAlerta = () => {
+      setAlerta({ ...alerta, visible: false });
+    };
+  
+    const cerrarSesion = useCallback(() => {
+      clearSession();
+      mostrarAlerta("Sesión cerrada correctamente");
+      setTimeout(() => {
+      navigate('/login');
+      },1000);
+    }, [navigate]);
 
   const cerrarSidebar = useCallback(() => {
     setAbierto(false);
@@ -56,15 +94,21 @@ function SidebarAdmin({ abierto, setAbierto }) {
 
         <div className="profile-section">
           <img className="profile-image" src="https://static.vecteezy.com/system/resources/thumbnails/029/621/646/small_2x/hacker-with-laptop-hacking-computer-system-isolated-on-transparent-background-png.png" alt="Admin" />
-          <div className="wallet-address">0xADMIN123...ABC</div>
+          <div className="wallet-address">{sessionData.direccion_wallet}</div>
         </div>
 
         <div className="sidebar-buttons">
           <button className="sidebar-button" onClick={() => navigate('/admin')}>Mis Licencias</button>
           <button className="sidebar-button" onClick={() => navigate('/admin/licencias-emitidas')}>Licencias Emitidas</button>
-          {/* <button className="sidebar-button" onClick={() => navigate('/admin/configuracion')}>Configuración</button> */}
-          <button className="sidebar-button logout" onClick={() => navigate('/logout')}>Cerrar sesión</button>
+          <button className="sidebar-button logout" onClick={() => cerrarSesion()}>Cerrar sesión</button>
         </div>
+        <AlertaOscura
+          visible={alerta.visible}
+          mensaje={alerta.mensaje}
+          tipo={alerta.tipo}
+          onClose={cerrarAlerta}
+          duracion={3000}
+        />
       </div>
     </>
   );

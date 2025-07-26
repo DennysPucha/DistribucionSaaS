@@ -1,10 +1,29 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SidebarUser.css';
+import { clearSession } from '../../../utils/methods/session';
+import AlertaOscura from '../../componentes/alertas/alertaOscura';
 
 function SidebarUsuario({ abierto, setAbierto }) {
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
+  const [alerta, setAlerta] = useState({ visible: false, mensaje: '', tipo: 'error' });
+
+  const mostrarAlerta = (mensaje) => {
+    setAlerta({ visible: true, mensaje, tipo: 'error' });
+  };
+
+  const cerrarAlerta = () => {
+    setAlerta({ ...alerta, visible: false });
+  };
+
+  const cerrarSesion = useCallback(() => {
+    clearSession();
+    mostrarAlerta("Sesión cerrada correctamente");
+    setTimeout(() => {
+    navigate('/login');
+    },1000);
+  }, [navigate]);
 
   const cerrarSidebar = useCallback(() => {
     setAbierto(false);
@@ -51,6 +70,13 @@ function SidebarUsuario({ abierto, setAbierto }) {
       {abierto && <div className="sidebar-overlay" onClick={cerrarSidebar}></div>}
       <div ref={sidebarRef} className={`sidebar ${abierto ? 'sidebar-abierto' : ''}`}>
         <button className="close-button" onClick={cerrarSidebar}>✕</button>
+        <AlertaOscura
+          visible={alerta.visible}
+          mensaje={alerta.mensaje}
+          tipo={alerta.tipo}
+          onClose={cerrarAlerta}
+          duracion={3000}
+        />
 
         <div className="app-title">Mi Cuenta</div>
 
@@ -63,8 +89,10 @@ function SidebarUsuario({ abierto, setAbierto }) {
           <button className="sidebar-button" onClick={() => navigate('/licencias')}>Catalogo de Licencias</button>
           <button className="sidebar-button" onClick={() => navigate('/User/mis-licencias')}>Mis licencias</button>
           <button className="sidebar-button" onClick={() => navigate('/User/perfil-usuario')}>Perfil</button>
-          <button className="sidebar-button logout" onClick={() => navigate('/logout')}>Cerrar sesión</button>
+          <button className="sidebar-button logout" onClick={() => cerrarSesion()}>Cerrar sesión</button>
         </div>
+
+
       </div>
     </>
   );

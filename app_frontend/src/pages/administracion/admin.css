@@ -1,151 +1,204 @@
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #121212;
-    color: #fff;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #121212;
+  color: #fff;
+}
+
+.admin-panel {
+  padding: 2rem;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  max-width: 1500px;
+  margin: 2rem auto 0 auto;
+}
+
+.crear-btn {
+  margin-left: auto;
+  background-color: #1f80e0;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.crear-btn:hover {
+  background-color: #166ac4;
+}
+
+.licencias-grid {
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(1000px, 1fr));
+  gap: 2rem;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.licencia-card {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: #1e1e1e;
+  padding: 1rem;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 25px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.licencia-card img {
+  width: 100%;
+  max-width: 500px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px; 
+  flex-shrink: 0;
+}
+
+.licencia-card span {
+  min-width: 100px;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+.estado {
+  display: inline-block;
+  margin: 0.5rem 0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  text-align: center;
+}
+
+.estado.disponible {
+  background-color: #28a745;
+}
+
+.estado.no-disponible {
+  background-color: #dc3545;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.acciones button {
+  margin: 0.3rem 0;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #444;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.acciones button:hover {
+  background-color: #666;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formulario input,
+.formulario textarea {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  padding: 0.5rem;
+  color: white;
+  border-radius: 5px;
+}
+
+.formulario label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.formulario button {
+  background-color: #1f80e0;
+  color: white;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.formulario button:hover {
+  background-color: #166ac4;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-contenido {
+  background: #1c1c1c;
+  padding: 2rem;
+  border-radius: 10px;
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+}
+
+.cerrar-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Breakpoint para pantallas pequeñas */
+@media (max-width: 600px) {
+  .licencia-card {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .admin-panel {
-    padding: 2rem;
-  }
-  
-  .head {
-    display: flex;
-    flex-direction: column;
-    max-width: 1500px;
-    margin: 2rem auto 0 auto;
-  }
-  
-  .crear-btn {
-    margin-left: auto;
-    background-color: #1f80e0;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .licencias-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
-    column-gap: 2.5rem;
-    max-width: 1500px;
-    margin: 0 auto 0 auto;
-  }
-  
-  .licencia-card {
-    display: flex;
-    background-color: #1e1e1e;
-    padding: 1rem;
-    border-radius: 10px;
-    text-align: center;
-    align-items: center;
-    gap: 8em;
-    margin-top: 25px;
-    max-height: 70px;
-  
-    && span {
-      width: 150px;
-    }
-  }
-  
   .licencia-card img {
-    width: 40%;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  
-  .estado {
-    display: inline-block;
-    margin: 0.5rem 0;
-    padding: 0.2rem 0.5rem;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .estado.disponible {
-    background-color: #28a745;
-  }
-  
-  .estado.no-disponible {
-    background-color: #dc3545;
-  }
-  
-  .acciones button {
-    margin: 0.3rem;
-    padding: 0.4rem 0.8rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  
-  .formulario {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .formulario input,
-  .formulario textarea {
-    background: #2a2a2a;
-    border: 1px solid #444;
-    padding: 0.5rem;
-    color: white;
-    border-radius: 5px;
-  }
-  
-  .formulario label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  .formulario button {
-    background-color: #1f80e0;
-    color: white;
-    padding: 0.6rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
+    height: auto;
   }
-  
-  .modal-contenido {
-    background: #1c1c1c;
-    padding: 2rem;
-    border-radius: 10px;
-    position: relative;
-    width: 90%;
-    max-width: 500px;
+
+  .acciones {
+    flex-direction: column;
+    width: 100%;
   }
-  
-  .cerrar-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: transparent;
-    color: white;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
+
+  .acciones button {
+    width: 100%;
   }
-  
+}
