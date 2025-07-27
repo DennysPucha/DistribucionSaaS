@@ -1,61 +1,79 @@
-import React, { useState } from "react";
+import React from "react";
 import "./misLicencias.css";
-
-const licenciasUsuario = [
-  {
-    id: 1,
-    nombre: "Licencia Pro",
-    fechaInicio: "2025-07-01",
-    fechaExpiracion: "2025-08-01",
-    estado: "Activo",
-    wallet: "0xabc123..."
-  },
-  {
-    id: 2,
-    nombre: "Licencia Estudiante",
-    fechaInicio: "2025-06-01",
-    fechaExpiracion: "2025-07-01",
-    estado: "Expirada",
-    wallet: "0xabc123..."
-  }
-];
+import { useGetLicenciasbyCurrentUser } from "../../../hooks/licencias";
+import AlertaOscura from "../../componentes/alertas/alertaOscura";
 
 const MisLicencias = () => {
-  const [licencias, setLicencias] = useState(licenciasUsuario);
+  const { licencias, isLoading } = useGetLicenciasbyCurrentUser();
+  const [alerta, setAlerta] = React.useState({ visible: false, mensaje: "", tipo: "info" });
+
+  const mostrarAlerta = (mensaje, tipo = "info") => {
+    setAlerta({ visible: true, mensaje, tipo });
+  };
+  const cerrarAlerta = () => {
+    setAlerta({ ...alerta, visible: false });
+  };
+
+  const copiarLicencia = (clave) => {
+    navigator.clipboard.writeText(clave);
+    mostrarAlerta("Clave de licencia copiada al portapapeles", "success");
+  };
+
+  if (isLoading) {
+    return <div className="loading">Cargando licencias...</div>;
+  }
 
   return (
     <div className="mis-licencias-container">
-      <h2>Mis Licencias Activas</h2>
+      <h2>Mis Licencias</h2>
       <div className="lista-licencias">
         <div className="encabezado">
-          <span>Nombre</span>
+          <span>Nombre SaaS</span>
           <span>Inicio</span>
           <span>Expira</span>
           <span>Estado</span>
-          <span>Wallet</span>
+          <span>Wallet Distribuidor</span>
+          <span>Licencia</span>
         </div>
         {licencias.map((lic) => (
           <div className="fila" key={lic.id}>
-            <span>{lic.nombre}</span>
-            <span>{lic.fechaInicio}</span>
-            <span>{lic.fechaExpiracion}</span>
+            <span>{lic.nombre_saas}</span>
+            <span>{lic.fecha_emision}</span>
+            <span>{lic.fecha_expiracion}</span>
             <span>
               <span
                 className={`badge ${
-                  lic.estado === "Activo"
+                  lic.estadoLicencia === "Activa"
                     ? "badge-activo"
-                    : lic.estado === "Suspendida"
+                    : lic.estadoLicencia === "Suspendida"
                     ? "badge-suspendido"
                     : "badge-expirado"
                 }`}
               >
-                {lic.estado}
+                {lic.estadoLicencia}
               </span>
             </span>
-            <span className="wallet">{lic.wallet}</span>
+            <span className="wallet">{lic.wallet_administrador}</span>
+            <span className="licencia-copiable">
+              <button
+                className="copiar-btn"
+                onClick={() => copiarLicencia(lic.clave_licencia)}
+              >
+                Copiar
+              </button>
+            </span>
           </div>
         ))}
       </div>
+      {alerta.visible && (
+        <AlertaOscura
+          visible={alerta.visible}
+          mensaje={alerta.mensaje}
+          tipo={alerta.tipo}
+          duracion={3000}
+          onClose={cerrarAlerta}
+        />
+      )}
     </div>
   );
 };

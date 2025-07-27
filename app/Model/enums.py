@@ -5,3 +5,7 @@ class EstadoLicencia(str, Enum):
     Revocada = "Revocada"
     Expirada = "Expirada"
 
+class DuracionUnidad(str, Enum):
+    DIAS = "dias"
+    MESES = "meses"
+    AÑOS = "años"

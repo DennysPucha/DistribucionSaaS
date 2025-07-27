@@ -1,10 +1,12 @@
 from pydantic import BaseModel
 from typing import List, Optional
+from app.Model.enums import DuracionUnidad
 
 class OfertaLicenciaBase(BaseModel):
     nombre_saas: str
     terminos: str
-    tipo: str
+    duracion_cantidad: int
+    duracion_unidad: DuracionUnidad
     img: str
     descripcion: str
     state: bool = True

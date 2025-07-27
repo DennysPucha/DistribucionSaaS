@@ -67,14 +67,30 @@ def ampliar_licencia_endpoint(licencia_id: int, data: licencia_schema.AmpliarLic
         raise Exception(f"Error al ampliar licencia: {str(e)}")
     return {"licencia": licencia_ampliada, "code": status.HTTP_200_OK, "message": "Licencia ampliada correctamente"}
 
-@router.get("/blockchain/{usuario_id}/{licencia_index}", response_model=licencia_schema.LicenciaBlockchainResponse)
-def get_licencia_from_blockchain_endpoint(usuario_id: int, licencia_index: int, db: Session = Depends(get_db)):
+@router.get("/usuario/{usuario_id}", response_model=licencia_schema.LicenciaOfertaListResponse)
+def obtener_licencias_por_usuario(usuario_id: int, db: Session = Depends(get_db)):
     try:
-        licencia = licencia_service.get_licencia_from_blockchain(usuario_id, licencia_index, db)
-        if not licencia:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Licencia no encontrada en la blockchain")
+        licencias = licencia_service.obtener_licencias_por_usuario(db, usuario_id)
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:
-        raise Exception(f"Error al obtener licencia de la blockchain: {str(e)}")
-    return licencia
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
+
+    return {
+        "licencias": licencias,
+        "code": status.HTTP_200_OK,
+        "message": "Licencias obtenidas correctamente"
+    }
+
+@router.get("/usuario/{usuario_id}/emitidas", response_model=licencia_schema.LicenciaOfertaListResponse)
+def obtener_licencias_emitidas_por_usuario(usuario_id: int, db: Session = Depends(get_db)):
+    try:
+        licencias = licencia_service.obtener_licencias_emitidas_por_usuario(db, usuario_id)
+        if not licencias:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontraron licencias emitidas para este usuario")
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise Exception(f"Error al obtener licencias emitidas por usuario: {str(e)}")
+    
+    return {"licencias": licencias, "code": status.HTTP_200_OK, "message": "Licencias emitidas obtenidas correctamente"}

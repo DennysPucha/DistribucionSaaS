@@ -13,8 +13,8 @@ function LicenciaCard({ licencia, onEditar, onEliminar }) {
     <div className="licencia-card">
       <img src={licencia.img} alt={licencia.nombre_saas} />
       <h3>{licencia.nombre_saas}</h3>
-      <p><strong>Tipo:</strong> {licencia.tipo}</p>
       <p><strong>Descripción:</strong> {licencia.descripcion}</p>
+      <p><strong>Duración:</strong> {licencia.duracion_cantidad} {licencia.duracion_unidad}</p>
       <div className="acciones">
         <DarkButton variant="secondary" onClick={onEditar}>Editar</DarkButton>
         <DarkButton variant="danger" onClick={onEliminar}>Eliminar</DarkButton>
