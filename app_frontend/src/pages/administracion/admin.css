@@ -47,22 +47,66 @@ body {
   background-color: #1e1e1e;
   padding: 1rem;
   border-radius: 10px;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
   margin-top: 25px;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
 
-  & p{
-    max-width: 150px;
+.licencia-contenido {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.texto-colapsable p {
+  margin: 0.5rem 0;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+.ver-mas-btn {
+  background: none;
+  color: #1f80e0;
+  border: none;
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.ver-mas-btn:hover {
+  color: #0af;
+}
+
+@media (max-width: 600px) {
+  .licencia-card {
+    flex-direction: column;
+  }
+
+  .licencia-card img {
+    width: 100%;
+    height: auto;
+  }
+
+  .acciones {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .acciones button {
+    width: 100%;
   }
 }
 
+
 .licencia-card img {
   width: 100%;
-  max-width: 150px;
-  height: 150px;
+  max-width: 350px;
+  height: 100%;
   object-fit: cover;
   border-radius: 8px; 
   flex-shrink: 0;
@@ -100,6 +144,8 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
 }
 
 .acciones button {

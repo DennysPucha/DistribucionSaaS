@@ -4,32 +4,42 @@ import { getSession } from "../utils/methods/session";
 
 //Permite hacer el refetch de las licencias y devolver un boolean si isloading
 export function useGetOfertaLicencias() {
-    const [licencias, setLicencias] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const token = getSession()?.token || "";
-  
-    const fetchLicencias = useCallback(async () => {
-      setIsLoading(true);
-      try {
-        const response = await GET('ofertas-licencia', {}, token);
-        if (response.code === 200) {
-          console.log("Licencias obtenidas:", response);
-          setLicencias(response.ofertas_licencia || []);
-        } else {
-          console.error("Error fetching licencias:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching licencias:", error);
-      } finally {
-        setIsLoading(false);
+  const [licencias, setLicencias] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const token = getSession()?.token || "";
+
+  const fetchLicencias = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await GET('ofertas-licencia', {}, token);
+      
+      if (response.code === 200) {
+        // Verificamos si la respuesta tiene datos, incluso si es un array vacío
+        const data = response.ofertas_licencia || [];
+        console.log("Licencias obtenidas:", data);
+        setLicencias(data);
+      } else {
+        const errorMsg = response.message || "Error al obtener las licencias";
+        console.error("Error fetching licencias:", errorMsg);
+        setError(errorMsg);
+        setLicencias([]); // Aseguramos que el estado sea un array vacío
       }
-    }, [token]);
-  
-    useEffect(() => {
-      fetchLicencias();
-    }, [fetchLicencias]);
-  
-    return { licencias, isLoading, refetch: fetchLicencias };
+    } catch (error) {
+      console.error("Error fetching licencias:", error);
+      setError(error.message || "Error de conexión");
+      setLicencias([]); // Aseguramos que el estado sea un array vacío
+    } finally {
+      setIsLoading(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    fetchLicencias();
+  }, [fetchLicencias]);
+
+  return { licencias, isLoading, error, refetch: fetchLicencias };
 }
 
 

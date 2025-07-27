@@ -9,19 +9,16 @@ function SidebarUsuario({ abierto, setAbierto }) {
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
   const [alerta, setAlerta] = useState({ visible: false, mensaje: '', tipo: 'error' });
-  const [dataSession, setDataSession] = useState({});
+  const [dataSession, setDataSession] = useState(null); // Cambiado a null inicial
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getDataFromSession();
-        if (data) {
-          setDataSession(data);
-        } else {
-          console.error("No se pudo obtener la información de la sesión");
-        }
+        setDataSession(data || {}); // Asegura que siempre sea un objeto
       } catch (error) {
         console.error("Error al obtener los datos de la sesión:", error);
+        setDataSession({}); // En caso de error, establece un objeto vacío
       }
     };
     fetchData();
@@ -39,8 +36,8 @@ function SidebarUsuario({ abierto, setAbierto }) {
     clearSession();
     mostrarAlerta("Sesión cerrada correctamente");
     setTimeout(() => {
-    navigate('/login');
-    },1000);
+      navigate('/login');
+    }, 1000);
   }, [navigate]);
 
   const cerrarSidebar = useCallback(() => {
@@ -83,6 +80,12 @@ function SidebarUsuario({ abierto, setAbierto }) {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [abierto, cerrarSidebar]);
 
+  // Función para formatear la dirección de wallet
+  const formatWalletAddress = (address) => {
+    if (!address) return "No disponible";
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
   return (
     <>
       {abierto && <div className="sidebar-overlay" onClick={cerrarSidebar}></div>}
@@ -100,7 +103,9 @@ function SidebarUsuario({ abierto, setAbierto }) {
 
         <div className="profile-section">
           <img className="profile-image" src="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" alt="Usuario" />
-          <div className="wallet-address">{dataSession.direccion_wallet.slice(0,6)}...{dataSession.direccion_wallet.slice(-4)}</div>
+          <div className="wallet-address">
+            {dataSession?.direccion_wallet ? formatWalletAddress(dataSession.direccion_wallet) : "Cargando..."}
+          </div>
         </div>
 
         <div className="sidebar-buttons">
@@ -109,8 +114,6 @@ function SidebarUsuario({ abierto, setAbierto }) {
           <button className="sidebar-button" onClick={() => navigate('/User/perfil-usuario')}>Perfil</button>
           <button className="sidebar-button logout" onClick={() => cerrarSesion()}>Cerrar sesión</button>
         </div>
-
-
       </div>
     </>
   );
