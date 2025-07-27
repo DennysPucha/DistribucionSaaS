@@ -99,8 +99,8 @@ function SidebarUsuario({ abierto, setAbierto }) {
         <div className="app-title">Mi Cuenta</div>
 
         <div className="profile-section">
-          <img className="profile-image" src="https://static.vecteezy.com/system/resources/thumbnails/029/621/646/small_2x/hacker-with-laptop-hacking-computer-system-isolated-on-transparent-background-png.png" alt="Usuario" />
-          <div className="wallet-address">{dataSession.direccion_wallet}</div>
+          <img className="profile-image" src="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" alt="Usuario" />
+          <div className="wallet-address">{dataSession.direccion_wallet.slice(0,6)}...{dataSession.direccion_wallet.slice(-4)}</div>
         </div>
 
         <div className="sidebar-buttons">

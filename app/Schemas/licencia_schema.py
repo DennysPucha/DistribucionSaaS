@@ -12,6 +12,7 @@ class LicenciaBase(BaseModel):
     usuario_id: int
     oferta_licencia_id: int
     blockchain_index: Optional[int] = None
+    hash: str
 
 class LicenciaCreate(BaseModel):
     usuario_id: int
@@ -57,6 +58,7 @@ class LicenciaNueva(BaseModel):
     wallet_usuario: str
     wallet_administrador: str
     nombre_saas: str
+    hash: str
 
 class LicenciaOfertaResponse(BaseModel):
     licenciaNueva: LicenciaNueva

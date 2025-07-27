@@ -6,7 +6,7 @@ import { useGetLicenciasEmitidasbyCurrentUser, revocarLicencia, ampliarDuracionL
 import "./adminLicencias.css";
 
 const AdminLicencias = () => {
-  const { licenciasEmitidas:licencias, isLoading, refetch: fetchLicenciasEmitidas } = useGetLicenciasEmitidasbyCurrentUser();
+  const { licenciasEmitidas: licencias, isLoading, refetch: fetchLicenciasEmitidas } = useGetLicenciasEmitidasbyCurrentUser();
   const [modalActivo, setModalActivo] = useState(false);
   const [diasExtra, setDiasExtra] = useState("");
   const [licenciaSeleccionada, setLicenciaSeleccionada] = useState(null);
@@ -34,7 +34,7 @@ const AdminLicencias = () => {
         const response = await revocarLicencia(id);
         if (response.code === 200) {
           mostrarAlerta("Estado de licencia cambiado correctamente", "success");
-          fetchLicenciasEmitidas(); 
+          fetchLicenciasEmitidas();
         } else {
           mostrarAlerta("Error al cambiar el estado de la licencia: " + response.statusText, "error");
         }
@@ -50,6 +50,12 @@ const AdminLicencias = () => {
     setModalActivo(true);
     setDiasExtra("");
   };
+
+  const copiarHash = (hash) => {
+    navigator.clipboard.writeText(hash);
+    mostrarAlerta("Hash copiado al portapapeles", "success");
+  };
+
 
   const guardarDuracion = () => {
     if (!diasExtra || isNaN(diasExtra) || parseInt(diasExtra) <= 0) {
@@ -89,8 +95,7 @@ const AdminLicencias = () => {
       <div className="admin-lic-tabla">
         <div className="admin-lic-encabezado">
           <span>Nombre SaaS</span>
-          <span>ID Usuario</span>
-          <span>Wallet Admin</span>
+          <span>Wallet Usuario</span>
           <span>Inicio</span>
           <span>Expira</span>
           <span>Estado</span>
@@ -99,19 +104,17 @@ const AdminLicencias = () => {
         {licencias.map((licencia) => (
           <div className="admin-lic-fila" key={licencia.id}>
             <span>{licencia.nombre_saas}</span>
-            <span>{licencia.usuario_id}</span>
-            <span>{licencia.wallet_administrador}</span>
+            <span>{licencia.wallet_usuario.slice(0,8)}...{licencia.wallet_usuario.slice(-4)}</span>
             <span>{licencia.fecha_emision}</span>
             <span>{licencia.fecha_expiracion}</span>
             <span>
               <span
-                className={`admin-lic-badge ${
-                  licencia.estadoLicencia === "Activa"
-                    ? "admin-lic-badge-activo"
-                    : licencia.estadoLicencia === "Suspendida"
+                className={`admin-lic-badge ${licencia.estadoLicencia === "Activa"
+                  ? "admin-lic-badge-activo"
+                  : licencia.estadoLicencia === "Suspendida"
                     ? "admin-lic-badge-suspendido"
                     : "admin-lic-badge-expirado"
-                }`}
+                  }`}
               >
                 {licencia.estadoLicencia}
               </span>
@@ -125,6 +128,9 @@ const AdminLicencias = () => {
               </DarkButton>
               <DarkButton variant="primary" onClick={() => abrirModal(licencia)}>
                 Ampliar duración
+              </DarkButton>
+              <DarkButton variant="secondary" onClick={() => copiarHash(licencia.hash)}>
+                (Copiar Hash)
               </DarkButton>
             </span>
           </div>

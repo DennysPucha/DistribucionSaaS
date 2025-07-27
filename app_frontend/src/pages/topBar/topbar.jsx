@@ -7,13 +7,6 @@ function Topbar({ onToggleSidebar }) {
         <button className="topbar-toggle" onClick={onToggleSidebar}>☰</button>
         <span className="topbar-title">Distribución de licencias SaaS</span>
       </div>
-      <div className="topbar-right">
-        <input
-          className="topbar-search"
-          type="text"
-          placeholder="Buscar..."
-        />
-      </div>
     </header>
   );
 }

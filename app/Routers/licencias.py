@@ -86,8 +86,7 @@ def obtener_licencias_por_usuario(usuario_id: int, db: Session = Depends(get_db)
 def obtener_licencias_emitidas_por_usuario(usuario_id: int, db: Session = Depends(get_db)):
     try:
         licencias = licencia_service.obtener_licencias_emitidas_por_usuario(db, usuario_id)
-        if not licencias:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontraron licencias emitidas para este usuario")
+
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:

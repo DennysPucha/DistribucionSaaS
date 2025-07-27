@@ -19,6 +19,11 @@ const MisLicencias = () => {
     mostrarAlerta("Clave de licencia copiada al portapapeles", "success");
   };
 
+  const copiarHash = (hash) => {
+    navigator.clipboard.writeText(hash);
+    mostrarAlerta("Hash copiado al portapapeles", "success");
+  };
+
   if (isLoading) {
     return <div className="loading">Cargando licencias...</div>;
   }
@@ -53,14 +58,21 @@ const MisLicencias = () => {
                 {lic.estadoLicencia}
               </span>
             </span>
-            <span className="wallet">{lic.wallet_administrador}</span>
+            <span>{lic.wallet_administrador.slice(0,8)}...{lic.wallet_administrador.slice(-4)}</span>
             <span className="licencia-copiable">
               <button
                 className="copiar-btn"
                 onClick={() => copiarLicencia(lic.clave_licencia)}
               >
-                Copiar
+                Copiar Licencia
               </button>
+              <button
+                className="copiar-btn"
+                onClick={() => copiarHash(lic.hash)}
+              >
+                Copiar Hash
+              </button>
+
             </span>
           </div>
         ))}

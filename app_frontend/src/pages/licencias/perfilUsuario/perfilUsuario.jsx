@@ -76,6 +76,7 @@ const PerfilUsuario = () => {
 
         {alerta.visible && (
           <AlertaOscura
+            visible={alerta.visible}
             mensaje={alerta.mensaje}
             tipo={alerta.tipo}
             onClose={cerrarAlerta}

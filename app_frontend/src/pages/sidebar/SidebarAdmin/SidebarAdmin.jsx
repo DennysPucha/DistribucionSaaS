@@ -94,7 +94,7 @@ function SidebarAdmin({ abierto, setAbierto }) {
 
         <div className="profile-section">
           <img className="profile-image" src="https://static.vecteezy.com/system/resources/thumbnails/029/621/646/small_2x/hacker-with-laptop-hacking-computer-system-isolated-on-transparent-background-png.png" alt="Admin" />
-          <div className="wallet-address">{sessionData.direccion_wallet}</div>
+          <div className="wallet-address">{sessionData.direccion_wallet.slice(0,6)}...{sessionData.direccion_wallet.slice(-4)}</div>
         </div>
 
         <div className="sidebar-buttons">
