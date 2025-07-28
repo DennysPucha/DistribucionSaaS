@@ -7,15 +7,15 @@ import { clearSession, getDataFromSession } from '../../../utils/methods/session
 function SidebarAdmin({ abierto, setAbierto }) {
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
-  const [sessionData, setSessionData] = useState({});
+  const [sessionData, setSessionData] = useState(null);
   const [alerta, setAlerta] = useState({ visible: false, mensaje: '', tipo: 'error' });
-  
+
   useEffect(() => {
     const fetchSessionData = async () => {
       try {
         const data = await getDataFromSession();
         if (data) {
-          setSessionData(data);
+          setSessionData(data || {});
           console.log("Datos de sesión obtenidos:", data);
         } else {
           mostrarAlerta("No se pudo obtener la información de la sesión");
@@ -28,21 +28,21 @@ function SidebarAdmin({ abierto, setAbierto }) {
     fetchSessionData();
   }, []);
 
-    const mostrarAlerta = (mensaje) => {
-      setAlerta({ visible: true, mensaje, tipo: 'error' });
-    };
-  
-    const cerrarAlerta = () => {
-      setAlerta({ ...alerta, visible: false });
-    };
-  
-    const cerrarSesion = useCallback(() => {
-      clearSession();
-      mostrarAlerta("Sesión cerrada correctamente");
-      setTimeout(() => {
+  const mostrarAlerta = (mensaje) => {
+    setAlerta({ visible: true, mensaje, tipo: 'error' });
+  };
+
+  const cerrarAlerta = () => {
+    setAlerta({ ...alerta, visible: false });
+  };
+
+  const cerrarSesion = useCallback(() => {
+    clearSession();
+    mostrarAlerta("Sesión cerrada correctamente");
+    setTimeout(() => {
       navigate('/login');
-      },1000);
-    }, [navigate]);
+    }, 1000);
+  }, [navigate]);
 
   const cerrarSidebar = useCallback(() => {
     setAbierto(false);
@@ -84,6 +84,11 @@ function SidebarAdmin({ abierto, setAbierto }) {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [abierto, cerrarSidebar]);
 
+  const formatWalletAddress = (address) => {
+    if (!address) return "No disponible";
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
   return (
     <>
       {abierto && <div className="sidebar-overlay" onClick={cerrarSidebar}></div>}
@@ -94,7 +99,9 @@ function SidebarAdmin({ abierto, setAbierto }) {
 
         <div className="profile-section">
           <img className="profile-image" src="https://static.vecteezy.com/system/resources/thumbnails/029/621/646/small_2x/hacker-with-laptop-hacking-computer-system-isolated-on-transparent-background-png.png" alt="Admin" />
-          <div className="wallet-address">{sessionData.direccion_wallet.slice(0,6)}...{sessionData.direccion_wallet.slice(-4)}</div>
+          <div className="wallet-address">
+            {sessionData?.direccion_wallet ? formatWalletAddress(sessionData.direccion_wallet) : "Cargando..."}
+          </div>
         </div>
 
         <div className="sidebar-buttons">

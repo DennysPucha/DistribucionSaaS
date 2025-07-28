@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Licencia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .login-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .error {
+            color: #f44336;
+            margin-top: 1rem;
+        }
+        
+        .success {
+            color: #4CAF50;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Validación de Licencia</h1>
+        <form id="licenseForm">
+            <input type="text" id="licenseKey" placeholder="Ingrese su clave de licencia" required>
+            <button type="submit">Validar Licencia</button>
+        </form>
+        <div id="message" class="error" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById('licenseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const licenseKey = document.getElementById('licenseKey').value.trim();
+            const messageDiv = document.getElementById('message');
+            
+            messageDiv.style.display = 'none';
+            
+            if (!licenseKey) {
+                showMessage('Por favor ingrese una clave de licencia', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`http://localhost:8000/licencias/verificar/${licenseKey}`);
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Error al verificar la licencia');
+                }
+                
+                const data = await response.json();
+                
+                if (data.estadoLicencia) {
+                    showMessage('Licencia válida. Redirigiendo...', 'success');
+                    // Guardar la licencia válida en sessionStorage
+                    sessionStorage.setItem('validLicense', licenseKey);
+                    // Redirigir a la ventana principal
+                    setTimeout(() => {
+                        window.location.href = 'main.html';
+                    }, 1500);
+                } else {
+                    showMessage('Licencia no activa o ha expirado', 'error');
+                }
+            } catch (error) {
+                showMessage(error.message || 'Error al conectar con el servidor', 'error');
+            }
+        });
+        
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = type;
+            messageDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

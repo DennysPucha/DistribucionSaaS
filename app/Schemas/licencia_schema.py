@@ -36,6 +36,11 @@ class LicenciaResponse(BaseModel):
     code: int
     message: str
 
+class PublicLicenciaActivaResponse(BaseModel):
+    estadoLicencia: bool
+    code: int
+    message: str
+
 class LicenciaListResponse(BaseModel):
     licencias: List[Licencia]
     code: int

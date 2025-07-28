@@ -136,6 +136,7 @@ def ampliar_licencia(db: Session, licencia_id: int, data: AmpliarLicenciaRequest
     return db_licencia
 
 #debe devolver las licencias con su oferta de licencia asociada
+#este metodo debe cambiar el estado de las licencias si ya expiraron
 def obtener_licencias_por_usuario(db: Session, usuario_id: int) -> list[LicenciaNueva]:
     db_licencias = db.query(Licencia).filter(Licencia.usuario_id == usuario_id).all()
     if not db_licencias:
@@ -151,6 +152,12 @@ def obtener_licencias_por_usuario(db: Session, usuario_id: int) -> list[Licencia
 
         if not user:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+        # Verificar si la licencia ya ha expirado
+        if licencia.fecha_expiracion < date.today():
+            licencia.estadoLicencia = EstadoLicencia.Expirada
+            db.commit()
+
 
         licencia_nueva = LicenciaNueva(
             id=licencia.id,
@@ -172,6 +179,7 @@ def obtener_licencias_por_usuario(db: Session, usuario_id: int) -> list[Licencia
 # este nuevo metodo debe devolver las licencias emitidas por usuario desde la otra relacion
 # es decir desde la oferta de licencia toma el usuario_id y devuelve las licencias
 
+#este metodo debe cambiar el estado de las licencias si ya expiraron
 def obtener_licencias_emitidas_por_usuario(db: Session, usuario_id: int) -> list[LicenciaNueva]:
     db_ofertas = db.query(OfertaLicencia).filter(OfertaLicencia.usuario_id == usuario_id).all()
     if not db_ofertas:
@@ -185,8 +193,14 @@ def obtener_licencias_emitidas_por_usuario(db: Session, usuario_id: int) -> list
         for licencia in db_licencias:
             user = db.query(Usuario).filter(Usuario.id == licencia.usuario_id).first()
 
+
             if not user:
                 continue
+                
+            # Verificar si la licencia ya ha expirado
+            if licencia.fecha_expiracion < date.today():
+                licencia.estadoLicencia = EstadoLicencia.Expirada
+                db.commit()
 
             licencia_nueva = LicenciaNueva(
                 id=licencia.id,
@@ -207,6 +221,21 @@ def obtener_licencias_emitidas_por_usuario(db: Session, usuario_id: int) -> list
     return licencias_resultado
 
 
+# Este metodo permitira a los administradores saber si una licencia aun  esta activa
+# recibira la clave de la licencia y devolvera un booleano
+
+def verificar_licencia_activa(db: Session, clave_licencia: str) -> bool:
+    db_licencia = db.query(Licencia).filter(Licencia.clave_licencia == clave_licencia).first()
+    if not db_licencia:
+        raise HTTPException(status_code=404, detail="Licencia no encontrada")
+
+    # Verificar si la licencia ya ha expirado
+    if db_licencia.fecha_expiracion < date.today():
+        return False
+
+    return db_licencia.estadoLicencia == EstadoLicencia.Activa
+
 def generar_hash_transaccion(data: dict) -> str:
     concatenado = "|".join(str(data[key]) for key in sorted(data))
     return hashlib.sha256(concatenado.encode()).hexdigest()
+

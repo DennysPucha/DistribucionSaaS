@@ -93,3 +93,20 @@ def obtener_licencias_emitidas_por_usuario(usuario_id: int, db: Session = Depend
         raise Exception(f"Error al obtener licencias emitidas por usuario: {str(e)}")
     
     return {"licencias": licencias, "code": status.HTTP_200_OK, "message": "Licencias emitidas obtenidas correctamente"}
+
+
+#metodo para verificar si una licencia esta activa retorna un booleano
+@router.get("/verificar/{clave_licencia}", response_model=licencia_schema.PublicLicenciaActivaResponse)
+def verificar_licencia(clave_licencia: str, db: Session = Depends(get_db)):
+    try:
+        licencia = licencia_service.verificar_licencia_activa(db, clave_licencia=clave_licencia)
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise Exception(f"Error al verificar licencia: {str(e)}")
+    
+    return {
+        "estadoLicencia": licencia,
+        "code": status.HTTP_200_OK,
+        "message": "Licencia verificada correctamente"
+    }
