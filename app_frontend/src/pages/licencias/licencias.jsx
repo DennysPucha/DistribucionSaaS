@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import './licencias.css';
 import { useGetOfertaLicencias } from '../../hooks/ofertaLicencias';
 import ConfirmacionOscura from '../componentes/alertas/confirmacionOscura';
@@ -40,19 +40,11 @@ function Licencias() {
     );
   });
 
-  useEffect(() => {
-    if (licenciasFiltradas.length > 0) {
-      // Asegurarse de que el índice no exceda el límite
-      const nuevoIndice = Math.min(indiceCarrusel, licenciasFiltradas.length - 1);
-      setLicenciaSeleccionada(licenciasFiltradas[nuevoIndice]);
-      setIndiceCarrusel(nuevoIndice);
-    } else {
-      setLicenciaSeleccionada(null);
-      setIndiceCarrusel(0);
-    }
-  }, [licenciasData, licenciasFiltradas, indiceCarrusel]);
-
   const abrirModal = (licencia) => {
+    const indice = licenciasFiltradas.findIndex(l => l.id === licencia.id);
+    if (indice !== -1) {
+      setIndiceCarrusel(indice);
+    }
     setLicenciaSeleccionada(licencia);
     setModalActivo(true);
   };
@@ -64,15 +56,17 @@ function Licencias() {
 
   const siguiente = () => {
     if (licenciasFiltradas.length > 0) {
-      setIndiceCarrusel((prev) => (prev + 1) % licenciasFiltradas.length);
+      const nuevoIndice = (indiceCarrusel + 1) % licenciasFiltradas.length;
+      setIndiceCarrusel(nuevoIndice);
+      setLicenciaSeleccionada(licenciasFiltradas[nuevoIndice]);
     }
   };
 
   const anterior = () => {
     if (licenciasFiltradas.length > 0) {
-      setIndiceCarrusel((prev) =>
-        prev === 0 ? licenciasFiltradas.length - 1 : prev - 1
-      );
+      const nuevoIndice = indiceCarrusel === 0 ? licenciasFiltradas.length - 1 : indiceCarrusel - 1;
+      setIndiceCarrusel(nuevoIndice);
+      setLicenciaSeleccionada(licenciasFiltradas[nuevoIndice]);
     }
   };
 
@@ -140,10 +134,10 @@ function Licencias() {
           <div className="carrusel-container">
             <button className="carrusel-btn carrusel-anterior" onClick={anterior}>❮</button>
             <div className="carrusel-item" onClick={() => abrirModal(licenciasFiltradas[indiceCarrusel])}>
-              <img 
-                src={licenciasFiltradas[indiceCarrusel].img} 
-                alt={licenciasFiltradas[indiceCarrusel].nombre_saas} 
-                className="carrusel-imagen" 
+              <img
+                src={licenciasFiltradas[indiceCarrusel].img}
+                alt={licenciasFiltradas[indiceCarrusel].nombre_saas}
+                className="carrusel-imagen"
               />
               <h2 className="carrusel-nombre">{licenciasFiltradas[indiceCarrusel].nombre_saas}</h2>
               <p className="carrusel-descripcion">{licenciasFiltradas[indiceCarrusel].descripcion}</p>
