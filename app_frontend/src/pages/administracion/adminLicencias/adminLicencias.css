@@ -25,6 +25,11 @@
     font-weight: bold;
   }
   
+
+.admin-lic-badge-reclamada {
+  background-color: #17a2b8; 
+}
+
   .admin-lic-badge {
     padding: 0.4rem 0.8rem;
     border-radius: 5px;

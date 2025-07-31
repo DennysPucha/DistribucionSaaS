@@ -47,18 +47,19 @@ const MisLicencias = () => {
             <span>{lic.fecha_expiracion}</span>
             <span>
               <span
-                className={`badge ${
-                  lic.estadoLicencia === "Activa"
+                className={`badge ${lic.estadoLicencia === "Activa"
                     ? "badge-activo"
                     : lic.estadoLicencia === "Suspendida"
-                    ? "badge-suspendido"
-                    : "badge-expirado"
-                }`}
+                      ? "badge-suspendido"
+                      : lic.estadoLicencia === "Reclamada"
+                        ? "badge-reclamada"
+                        : "badge-expirado"
+                  }`}
               >
                 {lic.estadoLicencia}
               </span>
             </span>
-            <span>{lic.wallet_administrador.slice(0,8)}...{lic.wallet_administrador.slice(-4)}</span>
+            <span>{lic.wallet_administrador.slice(0, 8)}...{lic.wallet_administrador.slice(-4)}</span>
             <span className="licencia-copiable">
               <button
                 className="copiar-btn"

@@ -35,6 +35,11 @@
   text-align: center;
 }
 
+.badge-reclamada {
+  background-color: #17a2b8;
+}
+
+
 .badge-activo {
   background-color: #28a745;
 }

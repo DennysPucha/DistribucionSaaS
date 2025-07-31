@@ -86,16 +86,21 @@ def revocar_licencia(db: Session, licencia_id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Blockchain error: {e}")
 
-    
-    if db_licencia.estadoLicencia == EstadoLicencia.Revocada:
-        db_licencia.estadoLicencia = EstadoLicencia.Activa
-    else:
+    if db_licencia.estadoLicencia == EstadoLicencia.Activa:
         db_licencia.estadoLicencia = EstadoLicencia.Revocada
-    
+    elif db_licencia.estadoLicencia == EstadoLicencia.Revocada:
+        db_licencia.estadoLicencia = EstadoLicencia.Activa
+    elif db_licencia.estadoLicencia == EstadoLicencia.Reclamada:
+        db_licencia.estadoLicencia = EstadoLicencia.Activa
+    elif db_licencia.estadoLicencia == EstadoLicencia.Expirada:
+        db_licencia.estadoLicencia = EstadoLicencia.Activa
+        if db_licencia.fecha_expiracion:
+            db_licencia.fecha_expiracion = db_licencia.fecha_expiracion + timedelta(days=2)
+
     hash_datos = {
-    "func": "revocarLicencia",
-    "licencia_id": licencia_id,
-    "fecha": str(date.today())
+        "func": "revocarLicencia",
+        "licencia_id": licencia_id,
+        "fecha": str(date.today())
     }
 
     hash = generar_hash_transaccion(hash_datos)
@@ -104,7 +109,6 @@ def revocar_licencia(db: Session, licencia_id: int):
     db.commit()
     db.refresh(db_licencia)
     return db_licencia
-
 
 def ampliar_licencia(db: Session, licencia_id: int, data: AmpliarLicenciaRequest):
     db_licencia = get_licencia(db, licencia_id)
@@ -232,8 +236,19 @@ def verificar_licencia_activa(db: Session, clave_licencia: str) -> bool:
     # Verificar si la licencia ya ha expirado
     if db_licencia.fecha_expiracion < date.today():
         return False
+    
+    if db_licencia.estadoLicencia == EstadoLicencia.Reclamada:
+        return False
 
-    return db_licencia.estadoLicencia == EstadoLicencia.Activa
+    if db_licencia.estadoLicencia == EstadoLicencia.Activa:
+        db_licencia.estadoLicencia = EstadoLicencia.Reclamada
+        db.commit()
+        return True
+    
+    if db_licencia.estadoLicencia == EstadoLicencia.Revocada:
+        return False
+
+    return False
 
 def generar_hash_transaccion(data: dict) -> str:
     concatenado = "|".join(str(data[key]) for key in sorted(data))

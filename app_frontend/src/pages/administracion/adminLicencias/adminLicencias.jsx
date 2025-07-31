@@ -104,16 +104,18 @@ const AdminLicencias = () => {
         {licencias.map((licencia) => (
           <div className="admin-lic-fila" key={licencia.id}>
             <span>{licencia.nombre_saas}</span>
-            <span>{licencia.wallet_usuario.slice(0,8)}...{licencia.wallet_usuario.slice(-4)}</span>
+            <span>{licencia.wallet_usuario.slice(0, 8)}...{licencia.wallet_usuario.slice(-4)}</span>
             <span>{licencia.fecha_emision}</span>
             <span>{licencia.fecha_expiracion}</span>
             <span>
               <span
                 className={`admin-lic-badge ${licencia.estadoLicencia === "Activa"
-                  ? "admin-lic-badge-activo"
-                  : licencia.estadoLicencia === "Suspendida"
-                    ? "admin-lic-badge-suspendido"
-                    : "admin-lic-badge-expirado"
+                    ? "admin-lic-badge-activo"
+                    : licencia.estadoLicencia === "Suspendida"
+                      ? "admin-lic-badge-suspendido"
+                      : licencia.estadoLicencia === "Reclamada"
+                        ? "admin-lic-badge-reclamada"
+                        : "admin-lic-badge-expirado"
                   }`}
               >
                 {licencia.estadoLicencia}

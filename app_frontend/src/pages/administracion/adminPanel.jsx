@@ -87,7 +87,7 @@ function AdminPanel() {
       <header className='head'>
         <h1>Panel de Administración de Licencias</h1>
         <DarkButton className="crear-btn" onClick={() => setModalNewAbierto(true)}>
-          + Nueva Licencia
+          + Nueva Oferta de Licencia
         </DarkButton>
       </header>
 
