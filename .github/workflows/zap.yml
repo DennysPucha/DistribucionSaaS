@@ -18,33 +18,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build & Start app (background)
+      - name: Start services with Docker Compose
         run: |
-          npm run build
-          npm run start &
-          APP_PID=$!
-          echo "APP_PID=$APP_PID" >> $GITHUB_ENV
-          sleep 45  # Más tiempo para Next.js
+          docker compose up -d
+          sleep 30  # Espera a que inicie
 
       - name: OWASP ZAP Scan
         uses: zaproxy/action-full-scan@v0.10.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # Requerido para issues
-          target: 'http://localhost:5173'
-          cmd_options: '-a'  # Solo alpha rules
-          rules_file_name: '.github/zap-rules.tsv'  # Opcional
-          artifact_name: 'zap-report'
-          fail_action: true  # Falla si hay alerts
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target: 'http://localhost:5173'  # Puerto expuesto en compose
+          cmd_options: '-a'
+          docker_name: 'zap'  # Conecta ZAP al network de compose
 
-      - name: Stop app
+      - name: Stop services
         if: always()
-        run: kill ${{ env.APP_PID }} || true
+        run: docker compose down -v
