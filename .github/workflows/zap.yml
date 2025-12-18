@@ -1,4 +1,4 @@
-name: DAST - OWASP ZAP Scan
+name: DAST-OWASP-ZAP
 
 on:
   workflow_dispatch:
@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-
       contents: read
       issues: write
 
@@ -29,6 +28,7 @@ jobs:
           target: http://host.docker.internal:5173
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
+          artifact_name: zap_scan_report
 
       - name: Stop containers
-        run: docker-compose down
+        run: docker compose down
