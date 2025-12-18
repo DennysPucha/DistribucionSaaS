@@ -8,29 +8,33 @@ on:
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      issues: write
-      security-events: write
+    services:
+      app:
+        image: node:20
+        ports:
+          - 5173:5173
+        options: >-
+          --mount type=bind,source=/home/runner/work/DistribucionSaaS/DistribucionSaaS,target=/app
+        command: sh -c "cd /app && npm ci && npm run build && npm run start"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Start services with Docker Compose
-        run: |
-          docker compose up -d
-          sleep 30  # Espera a que inicie
+      - name: Wait for app
+        run: sleep 45
 
       - name: OWASP ZAP Scan
         uses: zaproxy/action-full-scan@v0.10.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'http://localhost:5173'  # Puerto expuesto en compose
+          target: 'http://localhost:5173'
           cmd_options: '-a'
-          docker_name: 'zap'  # Conecta ZAP al network de compose
 
-      - name: Stop services
-        if: always()
-        run: docker compose down -v
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-reports
+          path: |
+            report.html
+            report_json.json
