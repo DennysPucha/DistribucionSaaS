@@ -8,7 +8,6 @@ on:
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
       issues: write
@@ -20,13 +19,16 @@ jobs:
       - name: Start application
         run: |
           docker compose up -d
-          sleep 30
+          # Esperar a que el servicio responda (mejor que un sleep fijo)
+          timeout 60s bash -c 'until curl -s localhost:5173; do sleep 2; done'
 
       - name: OWASP ZAP Scan
         uses: zaproxy/action-full-scan@v0.10.0
         with:
-          target: http://host.docker.internal:5173
+          target: 'http://localhost:5173'
+          network_name: host
           cmd_options: '-a'
 
       - name: Stop containers
+        if: always()
         run: docker compose down
