@@ -1,40 +1,45 @@
-name: DAST-OWASP-ZAP
+name: Análisis Dinámico (DAST)
 
 on:
-  workflow_dispatch:
   push:
+    branches: [ "main" ]
+  pull_request:
     branches: [ "main" ]
 
 jobs:
-  zap_scan:
+  dast:
+    name: Escaneo OWASP ZAP
     runs-on: ubuntu-latest
-    services:
-      app:
-        image: node:20
-        ports:
-          - 5173:5173
-        options: >-
-          --mount type=bind,source=/home/runner/work/DistribucionSaaS/DistribucionSaaS,target=/app
-        command: sh -c "cd /app && npm ci && npm run build && npm run start"
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout del código
+        uses: actions/checkout@v3
 
-      - name: Wait for app
-        run: sleep 45
-
-      - name: OWASP ZAP Scan
-        uses: zaproxy/action-full-scan@v0.10.0
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'http://localhost:5173'
-          cmd_options: '-a'
+          node-version: '18'
 
-      - name: Upload reports
+      - name: Iniciar Servidor de Prueba
+        run: |
+          npm install -g http-server
+          npx http-server . -p 5173 &
+          # Esperamos a que el puerto responda
+          npx wait-on http://127.0.0.1:5173 -t 60000
+
+      - name: Escaneo ZAP Baseline (Docker)
+        run: |
+          docker run --rm --network host \
+          -v ${{ github.workspace }}:/zap/wrk/:rw \
+          -u 0 \
+          ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+          -t http://localhost:5173 \
+          -r zap_report.html \
+          -I
+
+      - name: Guardar resultados ZAP
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: zap-reports
-          path: |
-            report.html
-            report_json.json
+          name: zap_report
+          path: zap_report.html **
