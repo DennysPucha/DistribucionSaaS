@@ -15,7 +15,7 @@ jobs:
 
       - name: Start application
         run: |
-          docker-compose up -d
+          docker compose up -d
           sleep 30
 
       - name: OWASP ZAP Scan
