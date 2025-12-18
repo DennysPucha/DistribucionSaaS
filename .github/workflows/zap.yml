@@ -8,27 +8,43 @@ on:
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       issues: write
+      security-events: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Start application
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build & Start app (background)
         run: |
-          docker compose up -d
-          # Esperar a que el servicio responda (mejor que un sleep fijo)
-          timeout 60s bash -c 'until curl -s localhost:5173; do sleep 2; done'
+          npm run build
+          npm run start &
+          APP_PID=$!
+          echo "APP_PID=$APP_PID" >> $GITHUB_ENV
+          sleep 45  # Más tiempo para Next.js
 
       - name: OWASP ZAP Scan
         uses: zaproxy/action-full-scan@v0.10.0
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # Requerido para issues
           target: 'http://localhost:5173'
-          network_name: host
-          cmd_options: '-a'
+          cmd_options: '-a'  # Solo alpha rules
+          rules_file_name: '.github/zap-rules.tsv'  # Opcional
+          artifact_name: 'zap-report'
+          fail_action: true  # Falla si hay alerts
 
-      - name: Stop containers
+      - name: Stop app
         if: always()
-        run: docker compose down
+        run: kill ${{ env.APP_PID }} || true
