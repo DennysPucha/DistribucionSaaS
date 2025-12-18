@@ -1,32 +1,26 @@
-name: DAST-OWASP-ZAP
+name: ZAP Security Scan
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
 
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      issues: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Start application
-        run: |
-          docker compose up -d
-          sleep 30
-
-      - name: OWASP ZAP Scan
+      - name: OWASP ZAP Full Scan
         uses: zaproxy/action-full-scan@v0.10.0
         with:
-          target: http://host.docker.internal:5173
+          target: 'http://host.docker.internal:5173'
           cmd_options: '-a'
 
-      - name: Stop containers
-        run: docker compose down
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-report
+          path: |
+            report_html.html
+            report_md.md
+            report_json.json
