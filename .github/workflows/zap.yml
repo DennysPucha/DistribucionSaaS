@@ -26,7 +26,7 @@ jobs:
         uses: zaproxy/action-full-scan@v0.10.0
         with:
           target: http://host.docker.internal:5173
-          cmd_options: '-a -n'
+          cmd_options: '-a'
 
       - name: Stop containers
         run: docker compose down
