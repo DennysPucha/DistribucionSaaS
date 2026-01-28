@@ -1,32 +1,21 @@
-name: SAST - CodeQL Analysis
+name: CodeQL Analysis
 
 on:
-  push:
-    branches: [ "main", "patrones" ]
-  pull_request:
-    branches: [ "main", "patrones" ]
+  workflow_call:
 
 jobs:
   analyze:
-    name: Analyze Code
     runs-on: ubuntu-latest
-
     permissions:
       security-events: write
-      contents: read
-
-    strategy:
-      matrix:
-        language: [ 'javascript', 'python' ]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.language }}
+          languages: python, javascript
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
