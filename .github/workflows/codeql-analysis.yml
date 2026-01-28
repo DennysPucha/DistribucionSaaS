@@ -1,21 +1,26 @@
-name: Security Pipeline
+name: CodeQL Analysis
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-
-permissions:
-  contents: read
-  security-events: write 
-  actions: read
+  workflow_call:   # 👈 ESTO FALTABA
 
 jobs:
-  snyk:
-    uses: ./.github/workflows/snyk-analysis.yml
+  analyze:
+    runs-on: ubuntu-latest
 
-  codeql:
-    uses: ./.github/workflows/codeql-analysis.yml
+    permissions:
+      security-events: write
+      contents: read
 
-  dast:
-    uses: ./.github/workflows/dast-analysis.yml
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: python, javascript
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
