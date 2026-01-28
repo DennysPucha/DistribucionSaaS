@@ -6,8 +6,36 @@ on:
 jobs:
   dast:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - uses: zaproxy/action-baseline@v0.10.0
+
+      # 🐍 Instalar Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 📦 Instalar dependencias backend
+      - name: Install dependencies
+        run: |
+          cd app
+          pip install -r requirements.txt
+
+      # 🚀 Levantar FastAPI en segundo plano
+      - name: Start FastAPI server
+        run: |
+          cd app
+          nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
+
+      # ⏳ Esperar a que el servidor esté listo
+      - name: Wait for server
+        run: |
+          sleep 10
+          curl http://localhost:8000 || true
+
+      # 🛡️ Ejecutar DAST con ZAP
+      - name: Run OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.10.0
         with:
           target: "http://localhost:8000"
