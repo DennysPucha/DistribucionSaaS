@@ -1,0 +1,16 @@
+name: Security Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  snyk:
+    uses: ./.github/workflows/snyk-analysis.yml
+
+  codeql:
+    uses: ./.github/workflows/codeql-analysis.yml
+
+  dast:
+    uses: ./.github/workflows/dast-analysis.yml
