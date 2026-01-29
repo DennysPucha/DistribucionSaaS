@@ -4,15 +4,43 @@ on:
   workflow_call:
 
 jobs:
-  snyk:
+  snyk-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      # Python Scan
+      - name: Run Snyk for Python dependencies
+        uses: snyk/actions/python@0.4.0
+        continue-on-error: true
         with:
-          node-version: 18
-      - run: npm install
-        working-directory: app_frontend
-      - uses: snyk/actions/node@master
+          command: test
+          args: --file=app/requirements.txt --package-manager=pip --sarif-file-output=snyk-python.sarif
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      # JavaScript Scan
+      - name: Run Snyk for JavaScript dependencies
+        uses: snyk/actions/javascript@0.4.0
+        continue-on-error: true
+        with:
+          command: test
+          args: --file=app_frontend/package.json --package-manager=npm --sarif-file-output=snyk-js.sarif
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Upload Snyk Python results
+        if: success() || failure()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk-python.sarif
+
+      - name: Upload Snyk Javascript results
+        if: success() || failure()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk-js.sarif

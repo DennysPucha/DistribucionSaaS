@@ -1,7 +1,7 @@
 name: CodeQL Analysis
 
 on:
-  workflow_call:   # 👈 ESTO FALTABA
+  workflow_call:
 
 jobs:
   analyze:
