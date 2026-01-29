@@ -14,32 +14,47 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Node (para Snyk CLI)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
+      # Python (para resolver requirements)
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r app/requirements.txt
+
       - name: Install Snyk CLI
         run: npm install -g snyk
 
+      # 🐍 Python scan
       - name: Run Snyk for Python dependencies
-        run: snyk test --file=app/requirements.txt --package-manager=pip --sarif-file-output=snyk-python.sarif
-        continue-on-error: true
+        run: snyk test --file=app/requirements.txt --package-manager=pip --sarif-file-output=snyk-python.sarif || true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
+      # 🌐 JS scan
       - name: Run Snyk for JavaScript dependencies
-        run: snyk test --file=app_frontend/package.json --package-manager=npm --sarif-file-output=snyk-js.sarif
-        continue-on-error: true
+        run: snyk test --file=app_frontend/package.json --package-manager=npm --sarif-file-output=snyk-js.sarif || true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
+      # Subir solo si existen
       - name: Upload Snyk Python results
-        uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles('snyk-python.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: snyk-python.sarif
 
       - name: Upload Snyk JS results
-        uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles('snyk-js.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: snyk-js.sarif
