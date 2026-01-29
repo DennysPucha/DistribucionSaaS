@@ -14,31 +14,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 🧰 Instalar Node (necesario para Snyk CLI)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # 🔧 Instalar Snyk CLI
       - name: Install Snyk CLI
         run: npm install -g snyk
 
-      # 🔐 Autenticación
-      - name: Authenticate Snyk
-        run: snyk auth ${{ secrets.SNYK_TOKEN }}
-
-      # 🐍 Scan Python
       - name: Run Snyk for Python dependencies
         run: snyk test --file=app/requirements.txt --package-manager=pip --sarif-file-output=snyk-python.sarif
         continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      # 🌐 Scan JavaScript
       - name: Run Snyk for JavaScript dependencies
         run: snyk test --file=app_frontend/package.json --package-manager=npm --sarif-file-output=snyk-js.sarif
         continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      # 📤 Subir resultados a Security tab
       - name: Upload Snyk Python results
         uses: github/codeql-action/upload-sarif@v3
         with:
